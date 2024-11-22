@@ -6,7 +6,7 @@
 #    By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/11 11:18:50 by smagassa          #+#    #+#              #
-#    Updated: 2024/11/21 16:53:21 by smagassa         ###   ########.fr        #
+#    Updated: 2024/11/22 14:19:03 by smagassa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ RM = rm -f
 AR = ar -rc
 DEPS = includes
 
-CFLAGS = -Wall -Wextra -Werror -pthread -g3 -fsanitize=thread //pthread informe toi sur les effets
+CFLAGS = -Wall -Wextra -Werror -pthread -g3 -fsanitize=thread
 OBJS = $(SRCS:%.c=%.o)
 
 all: $(NAME)
