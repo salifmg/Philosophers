@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 17:05:09 by smagassa          #+#    #+#             */
-/*   Updated: 2024/11/22 18:16:05 by smagassa         ###   ########.fr       */
+/*   Updated: 2024/12/31 14:34:14 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	ft_atoi(const char *str)
 	return (result * sign);
 }
 
-void args_lists(t_info *general_data, int ac, char **param)
+void args_lists(t_info *g_data, int ac, char **param)
 {
 	int	i;
 
@@ -68,28 +68,27 @@ void args_lists(t_info *general_data, int ac, char **param)
 			return (1);
 		}
 	}
-	general_data->nb_philo = param[1];
-	general_data->t_die = param[2];
-	general_data->t_eat = param[3];
-	general_data->t_sleep = param[4];
+	g_data->nb_philo = param[1];
+	g_data->t_die = param[2];
+	g_data->t_eat = param[3];
+	g_data->t_sleep = param[4];
 	if (ac == 6)
-		general_data->nb_cycles = param[5];
+		g_data->nb_cycles = param[5];
 }
 
 int main(int ac, char **av)
 {
 	t_philo	*philo_data;
-	t_info	general_data;
+	t_info	g_data;
 
-	if (ac < 5 || ac > 6)
+	if (ac == 5 || ac == 6)
 	{
 		write(2, "<Nb_philo> <T_die> <T_eat> <T_sleep> [Nb_cycles]", 49);
 		return (1);
 	}
-	init_philo();
-	args_lists(&general_data, ac, av);
-	philosophers_creation(&general_data, philo_data);
-
+	args_lists(&g_data, ac, av);
+	philosophers_creation(&g_data, philo_data);
 	//pthread_join(&philo_data[i]->threads, NULL);
+
 	return (0);
 }
