@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 17:05:09 by smagassa          #+#    #+#             */
-/*   Updated: 2024/12/31 14:34:14 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/03 17:30:08 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ int	is_char(const char *str)
 
 int	ft_atoi(const char *str)
 {
-	int		i;
-	int		sign;
-	int		result;
+	int	i;
+	int	sign;
+	int	result;
 
 	i = 0;
 	sign = 1;
@@ -87,8 +87,8 @@ int main(int ac, char **av)
 		return (1);
 	}
 	args_lists(&g_data, ac, av);
+	// si 1 seul philo, cas specifique a gerer, detach car pas de join
 	philosophers_creation(&g_data, philo_data);
 	//pthread_join(&philo_data[i]->threads, NULL);
-
 	return (0);
 }
