@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:27:11 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/03 18:28:22 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/06 18:50:23 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	eating(t_info *g_data, t_timeval current_time)
 	long	t_left_eat;
 	
 	t_left_eat = g_data->t_eat;
+	print_logs(g_data, current_time, " is eating");
 	while (t_left_eat)
 	{
 		if (check_death(g_data, t_left_eat, current_time) != 0)
@@ -37,11 +38,12 @@ int	eating(t_info *g_data, t_timeval current_time)
 
 void *philo(void *param)
 {
-	long	time_passed; // en ms ou convertis, efface
-	int		loop_count;
-	int		thread_num;
-	t_info *g_data;
-	t_timeval current_time; //efface
+	long		time_passed; // en ms ou convertis, efface
+	int			loop_count;
+	int			thread_num;
+	char		*order;
+	t_info		*g_data;
+	t_timeval	current_time; //efface
 
 	loop_count = 0;
 	time_passed = 0; // UTILISE | TEMPS PASSE ENTRE CHAQUE REPAS
@@ -53,20 +55,17 @@ void *philo(void *param)
 	usleep(1);
 	pthread_mutex_unlock(&sync_order);
 
-	if (check_death(g_data, time_passed, current_time) != 0)
-		return (1);
 // mutex chaque ecriture et fonction  %d is eating", current_time.tv_usec, g_data->thread_count); //ptetre dans eating | usec * 1000
+	taking_forks(g_data, thread_num, current_time);
 	usleep(g_data->t_eat);
 	if (eating(g_data, current_time) == 1)
 		return (1);
-	leaving_forks(g_data, thread_num, current_time);
+	leaving_forks(g_data, thread_num);
 
-
-	printf("%ld %d is sleeping", current_time.tv_usec, g_data->thread_count); //check mort avec fonction
+	print_logs(g_data, current_time, " is sleeping"); //check mort avec fonction
 	usleep(g_data->t_sleep);
 
-
-	printf("%ld %d is thinking", current_time.tv_usec, g_data->thread_count);  
+	print_logs(g_data, current_time, " is thinking"); //check mort avec fonction 
 
 	/* 	if (loop_count)
 	{
@@ -85,22 +84,20 @@ void *philo(void *param)
 }
 
 int philosophers_creation(t_info *g_data, t_philo *philo_data)
-{// mutex chaque ecriture et fonction 
-	t_timeval	current_time;
-	int			i;
+{
+	t_timeval	current_time; //efface les tous ICI
 
-	i = 0;
 	pthread_mutex_init(&sync_order, NULL);
+	pthread_mutex_init(&writing, NULL);
 	init_lists(g_data);
-	forks = malloc(sizeof(pthread_mutex_t) * g_data->nb_philo);
-	if (!forks)
+	if (forks_creation(g_data) == 1)
 		return (1);
-	forks_creation(g_data);
 	threads_creation(g_data, philo_data);
-	gettimeofday(&current_time, NULL);
-	check_threads(g_data, current_time);
+	gettimeofday(&current_time, NULL);//efface les tous ICI
+	check_philos(g_data, current_time);//efface les tous ICI
 	delete_threads(g_data, philo_data);
 	delete_mutexes(g_data);
 	free(forks);
+	free(g_data->forks_status);
 	return (0);
 }

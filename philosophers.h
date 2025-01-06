@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:03:25 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/03 18:35:02 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/06 19:24:27 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,16 @@
 # include <sys/time.h>
 
 typedef struct timeval t_timeval;
+
 pthread_mutex_t sync_order; //dans une structure
 pthread_mutex_t *forks; //dans une structure
+pthread_mutex_t *writing; //dans une structure
 // pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 typedef struct s_info
 {
+	long	start_time;
+
 	int	nb_philo;
 	int	t_die;
 	int	t_eat;
@@ -35,6 +39,7 @@ typedef struct s_info
 	int	nb_cycles;
 
 	int *time_passed;
+	int	*forks_status;
 
 	int thread_count;
 	int thread_dead;
@@ -50,5 +55,7 @@ int	is_char(const char *str);
 int	is_num(const char str);
 
 void	*philo(void *param);
+
+time_t	get_ctime(void)
 
 #endif

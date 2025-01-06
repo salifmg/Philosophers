@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 19:34:00 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/03 17:30:38 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/06 17:45:10 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,37 +15,24 @@
 void	taking_forks(t_info *g_data, int thread_num, t_timeval current_time)
 {
 	pthread_mutex_lock(&forks[(thread_num + 1) % g_data->nb_philo]);
-	fork_status[(thread_num + 1) % g_data->nb_philo] = 1; // LE CREER | 0 existe | 1 pris
-	printf("%ld %d has taken a fork", current_time.tv_usec, g_data->thread_count);
+	g_data->forks_status[(thread_num + 1) % g_data->nb_philo] = 1; // LE CREER | 0 existe | 1 pris
+	print_logs(g_data->thread_count, current_time, " has taken a fork");
 
 	pthread_mutex_lock(&forks[thread_num]);
-	fork_status[thread_num] = 1;
-	printf("%ld %d has taken a fork", current_time.tv_usec, g_data->thread_count);
+	g_data->forks_status[thread_num] = 1;
+	print_logs(g_data->thread_count, current_time, " has taken a fork");
 }
 
-void	leaving_forks(t_info *g_data, int thread_num, t_timeval current_time)
+void	leaving_forks(t_info *g_data, int thread_num)
 {
-	if (fork_status[(thread_num + 1) % g_data->nb_philo] == 1)
+	if (g_data->forks_status[(thread_num + 1) % g_data->nb_philo] == 1)
 	{
 		pthread_mutex_unlock(&forks[(thread_num + 1) % g_data->nb_philo]);
-		fork_status[(thread_num + 1) % g_data->nb_philo] = 0;
+		g_data->forks_status[(thread_num + 1) % g_data->nb_philo] = 0;
 	}
-	if (fork_status[thread_num] == 1)
+	if (g_data->forks_status[thread_num] == 1)
 	{
 		pthread_mutex_unlock(&forks[thread_num]);
-		fork_status[thread_num] = 0;
+		g_data->forks_status[thread_num] = 0;
 	}
 }
-
-/* void	forks_status(t_info *g_data)
-{
-	int	i;
-
-	i = 0;
-	while (i < g_data->nb_philo)
-	{
-		if (fork_status[i] == 1)
-			printf("%ld %d has taken a fork", current_time.tv_usec, g_data->thread_count);
-		i++;
-	}
-} */
