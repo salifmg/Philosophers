@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 18:20:40 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/06 19:25:21 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/07 16:00:29 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,12 @@ void print_logs(t_info *g_data, long start_time, char *order)
     elapsed_time = now - start_time;
 
     pthread_mutex_lock(&writing);
-    if (g_data->thread_dead == 0)
+	if (ft_strcmp(order, "died") == 0 && g_data->thread_dead == 0) // recree la variable
+	{
+		g_data->thread_dead = 1;
+		printf("%ld %d %s\n", elapsed_time, g_data->thread_count, order);
+	}
+    else if (g_data->thread_dead == 0)
         printf("%ld %d %s\n", elapsed_time, g_data->thread_count, order);
     pthread_mutex_unlock(&writing);
 }

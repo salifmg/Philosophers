@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:03:25 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/06 19:24:27 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/07 14:50:33 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ pthread_mutex_t *writing; //dans une structure
 typedef struct s_info
 {
 	long	start_time;
+	long	*time_passed;
 
 	int	nb_philo;
 	int	t_die;
@@ -38,7 +39,7 @@ typedef struct s_info
 	int	t_sleep;
 	int	nb_cycles;
 
-	int *time_passed;
+
 	int	*forks_status;
 
 	int thread_count;
