@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 17:45:10 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/07 17:56:50 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/08 15:56:06 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ int	check_death(t_info *g_data, long last_meal_time)
     if (now - last_meal_time >= g_data->t_die)
     {
         print_logs(g_data, elapsed_time, "died");
-		// unlock les mutex tt les actions
         return (1);
     }
     else if (g_data->thread_dead)

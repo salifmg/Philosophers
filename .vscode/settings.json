@@ -1,0 +1,10 @@
+{
+	"editor.insertSpaces": false,
+	"files.autoSave": "onWindowChange",
+	"files.associations": {
+		"philosophers.h": "c",
+		"string.h": "c",
+		"stdarg.h": "c"
+	},
+	"window.zoomLevel": -0.3
+}

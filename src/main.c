@@ -6,54 +6,11 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 17:05:09 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/03 17:30:08 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/08 17:11:52 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-
-int	is_num(const char str)
-{
-	if (str >= '0' && str <= '9')
-		return (1);
-	else
-		return (0);
-}
-
-int	is_char(const char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (is_num(str[i]) == 0)
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-int	ft_atoi(const char *str)
-{
-	int	i;
-	int	sign;
-	int	result;
-
-	i = 0;
-	sign = 1;
-	result = 0;
-	while ((str[i] >= 9 && str[i] <= 13) || (str[i] == ' '))
-		i++;
-	while (str[i] >= '0' && str[i] <= '9')
-	{
-		result = result * 10 + str[i] - '0';
-		i++;
-	}
-	if (is_char(&str[i]) == 0)
-		return (0);
-	return (result * sign);
-}
 
 void args_lists(t_info *g_data, int ac, char **param)
 {
@@ -76,6 +33,7 @@ void args_lists(t_info *g_data, int ac, char **param)
 		g_data->nb_cycles = param[5];
 }
 
+
 int main(int ac, char **av)
 {
 	t_philo	*philo_data;
@@ -87,8 +45,16 @@ int main(int ac, char **av)
 		return (1);
 	}
 	args_lists(&g_data, ac, av);
+	philo_data = malloc(sizeof(t_philo) * g_data.nb_philo);
+	if (!philo_data)
+	{
+		perror("Failed to allocate memory for philosophers");
+		return (1);
+	}
 	// si 1 seul philo, cas specifique a gerer, detach car pas de join
-	philosophers_creation(&g_data, philo_data);
+	if (philosophers_creation(&g_data, philo_data) != 0)
+		return (free(philo_data), 1);
 	//pthread_join(&philo_data[i]->threads, NULL);
+	free(philo_data);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:27:11 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/07 20:03:25 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/08 17:25:59 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,9 @@ void *philo(void *param)
 	loop_count = 0;
 	g_data = (t_info *)param;
 	thread_num = g_data->thread_count - 1;
-	pthread_mutex_lock(&sync_order);
+	pthread_mutex_lock(&g_data->sync_order);
 	usleep(5);
-	pthread_mutex_unlock(&sync_order);
+	pthread_mutex_unlock(&g_data->sync_order);
 	g_data->time_passed[thread_num] = get_ctime();
 	while (1)
 	{
@@ -88,9 +88,8 @@ void *philo(void *param)
 		leaving_forks(g_data, thread_num);
 		if (sleeping(g_data, thread_num) == 1)
 			return (1);
-		print_logs(g_data, g_data->start_time, "is thinking");
-		loop_count++;
-		if (g_data->nb_cycles && loop_count >= g_data->nb_cycles)
+		print_logs(g_data, g_data->start_time, "is thinking"); //delais apres
+		if (g_data->nb_cycles && ++loop_count == g_data->nb_cycles)
 			break;
 	}
 	return (0);
@@ -98,16 +97,17 @@ void *philo(void *param)
 
 int philosophers_creation(t_info *g_data, t_philo *philo_data)
 {
-	pthread_mutex_init(&sync_order, NULL);
-	pthread_mutex_init(&writing, NULL);
-	init_lists(g_data);
+	pthread_mutex_init(&g_data->sync_order, NULL);
+	pthread_mutex_init(&g_data->writing, NULL);
+	if (init_lists(g_data) == 1)
+		return (1);
 	if (forks_creation(g_data) == 1)
 		return (1);
 	threads_creation(g_data, philo_data);
 	check_philos(g_data, 0);
 	delete_threads(g_data, philo_data);
 	delete_mutexes(g_data);
-	free(forks);
+	free(g_data->forks);
 	free(g_data->forks_status);
 	return (0);
 }
