@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 17:05:09 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/08 17:11:52 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/09 15:34:39 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,20 +41,17 @@ int main(int ac, char **av)
 
 	if (ac == 5 || ac == 6)
 	{
-		write(2, "<Nb_philo> <T_die> <T_eat> <T_sleep> [Nb_cycles]", 49);
+		write(2, "<Nb_philo> <T_die> <T_eat> <T_sleep> [Nb_cycles]", 49); //refuse cycle == 0
 		return (1);
 	}
 	args_lists(&g_data, ac, av);
 	philo_data = malloc(sizeof(t_philo) * g_data.nb_philo);
 	if (!philo_data)
-	{
-		perror("Failed to allocate memory for philosophers");
-		return (1);
-	}
-	// si 1 seul philo, cas specifique a gerer, detach car pas de join
-	if (philosophers_creation(&g_data, philo_data) != 0)
+		return (perror("Failed to allocate memory for philosophers"), 1);
+	if (g_data.nb_philo == 1)
+		single_philosopher(&g_data, philo_data);
+	else if (philosophers_creation(&g_data, philo_data) != 0)
 		return (free(philo_data), 1);
-	//pthread_join(&philo_data[i]->threads, NULL);
 	free(philo_data);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:27:11 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/08 17:25:59 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/09 19:10:25 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,7 @@ int	eating(t_info *g_data, int thread_num)
 		}
 	}
 	if (g_data->thread_dead == 1)
-	{
-		leaving_forks(g_data, thread_num);
-		return (1);
-	}
+		return (leaving_forks(g_data, thread_num));
 	g_data->time_passed[thread_num] = get_ctime();
 	return (0);
 }
@@ -60,10 +57,7 @@ int	sleeping(t_info *g_data, int thread_num)
 		}
 	}
 	if (g_data->thread_dead == 1)
-	{
-		leaving_forks(g_data, thread_num);
-		return (1);
-	}
+		return (leaving_forks(g_data, thread_num));
 	return (0);
 }
 
@@ -75,20 +69,22 @@ void *philo(void *param)
 
 	loop_count = 0;
 	g_data = (t_info *)param;
-	thread_num = g_data->thread_count - 1;
+	thread_num = g_data->thread_count;
 	pthread_mutex_lock(&g_data->sync_order);
-	usleep(5);
+	usleep(5); //plus gros ou ptit
 	pthread_mutex_unlock(&g_data->sync_order);
 	g_data->time_passed[thread_num] = get_ctime();
 	while (1)
 	{
-		taking_forks(g_data, thread_num);
+		if (taking_forks(g_data, thread_num))
+			return (1);
 		if (eating(g_data, thread_num) == 1)
 			return (1);
-		leaving_forks(g_data, thread_num);
+		if (leaving_forks(g_data, thread_num) == 1)
+			return (1);
 		if (sleeping(g_data, thread_num) == 1)
 			return (1);
-		print_logs(g_data, g_data->start_time, "is thinking"); //delais apres
+		print_logs(g_data, g_data->start_time, "is thinking"); //delais apres ptetre
 		if (g_data->nb_cycles && ++loop_count == g_data->nb_cycles)
 			break;
 	}
@@ -104,8 +100,37 @@ int philosophers_creation(t_info *g_data, t_philo *philo_data)
 	if (forks_creation(g_data) == 1)
 		return (1);
 	threads_creation(g_data, philo_data);
-	check_philos(g_data, 0);
+	if (check_philos(g_data, 0) == 1)
+	{
+		delete_threads(g_data, philo_data); //rend plus clean TOUT EN UN
+		delete_mutexes(g_data);
+		free(g_data->forks);
+		free(g_data->forks_status);
+		return (1);
+	}
 	delete_threads(g_data, philo_data);
+	delete_mutexes(g_data);
+	free(g_data->forks);
+	free(g_data->forks_status);
+	return (0);
+}
+
+int single_philosopher(t_info *g_data, t_philo *philo_data)
+{
+	pthread_mutex_init(&g_data->sync_order, NULL);
+	pthread_mutex_init(&g_data->writing, NULL);
+	if (init_lists(g_data) == 1)
+		return (1);
+	if (forks_creation(g_data) == 1)
+		return (1);
+	single_thread(g_data, philo_data);
+	if (check_philos(g_data, 0) == 1)
+	{
+		delete_mutexes(g_data);
+		free(g_data->forks);
+		free(g_data->forks_status);
+		return (1);
+	}
 	delete_mutexes(g_data);
 	free(g_data->forks);
 	free(g_data->forks_status);
