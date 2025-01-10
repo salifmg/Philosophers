@@ -6,20 +6,24 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 17:45:10 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/08 15:56:06 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:52:58 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void check_philos(t_info *g_data, int i)
+int check_philos(t_info *g_data, int i)
 {
-	while (check_death(g_data, g_data->time_passed[i++]) == 0)
+	while (g_data->th_end != g_data->nb_philo && check_death(g_data,
+             g_data->time_passed[i++]) == 0)
 	{
 		if (i == g_data->nb_philo)
 			i = 0;
-		usleep(50); //delai ptetre plus grand
+		usleep(50); //plus gros ou ptit
 	}
+    if (g_data->th_end == g_data->nb_philo)
+        return (0);
+    return (1);
 }
 
 int	check_death(t_info *g_data, long last_meal_time)

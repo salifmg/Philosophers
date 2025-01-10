@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:03:25 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/08 17:28:02 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:52:58 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ typedef struct timeval t_timeval;
 typedef struct s_info
 {
 	long	*time_passed;
-	int		*forks_status;
-	
 	long	start_time;
+
+	int		*forks_status;
 	int		nb_philo;
 	int		t_die;
 	int		t_eat;
@@ -36,10 +36,11 @@ typedef struct s_info
 	int		nb_cycles;
 	int		thread_count;
 	int		thread_dead;
-	
-	pthread_mutex_t	sync_order;
+	int		th_end;
+
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	*writing;
+	pthread_mutex_t	sync_order;
 }						t_info;
 
 typedef struct s_philo

@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:27:11 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/09 19:10:25 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/10 19:21:23 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,25 +68,20 @@ void *philo(void *param)
 	int			thread_num;
 
 	loop_count = 0;
-	g_data = (t_info *)param;
+	g_data = (t_info *)param; //juste param
 	thread_num = g_data->thread_count;
 	pthread_mutex_lock(&g_data->sync_order);
-	usleep(5); //plus gros ou ptit
+	usleep(100); //plus gros ou ptit
 	pthread_mutex_unlock(&g_data->sync_order);
 	g_data->time_passed[thread_num] = get_ctime();
 	while (1)
 	{
-		if (taking_forks(g_data, thread_num))
-			return (1);
-		if (eating(g_data, thread_num) == 1)
-			return (1);
-		if (leaving_forks(g_data, thread_num) == 1)
-			return (1);
-		if (sleeping(g_data, thread_num) == 1)
-			return (1);
-		print_logs(g_data, g_data->start_time, "is thinking"); //delais apres ptetre
+		philo_actions(g_data, thread_num);
 		if (g_data->nb_cycles && ++loop_count == g_data->nb_cycles)
+		{
+			g_data->th_end += 1;
 			break;
+		}
 	}
 	return (0);
 }
@@ -102,16 +97,10 @@ int philosophers_creation(t_info *g_data, t_philo *philo_data)
 	threads_creation(g_data, philo_data);
 	if (check_philos(g_data, 0) == 1)
 	{
-		delete_threads(g_data, philo_data); //rend plus clean TOUT EN UN
-		delete_mutexes(g_data);
-		free(g_data->forks);
-		free(g_data->forks_status);
+		del_and_free(g_data, philo_data, 1);
 		return (1);
 	}
-	delete_threads(g_data, philo_data);
-	delete_mutexes(g_data);
-	free(g_data->forks);
-	free(g_data->forks_status);
+	del_and_free(g_data, philo_data, 1);
 	return (0);
 }
 
@@ -126,13 +115,9 @@ int single_philosopher(t_info *g_data, t_philo *philo_data)
 	single_thread(g_data, philo_data);
 	if (check_philos(g_data, 0) == 1)
 	{
-		delete_mutexes(g_data);
-		free(g_data->forks);
-		free(g_data->forks_status);
+		del_and_free(g_data, philo_data, 2);
 		return (1);
 	}
-	delete_mutexes(g_data);
-	free(g_data->forks);
-	free(g_data->forks_status);
+	del_and_free(g_data, philo_data, 2);
 	return (0);
 }
