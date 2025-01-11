@@ -6,11 +6,11 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 16:28:43 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/10 18:34:26 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/11 19:46:09 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "../philosophers.h"
 
 int	init_lists(t_info *g_data)
 {
@@ -31,7 +31,7 @@ int	init_lists(t_info *g_data)
 	g_data->t_eat = 0;
 	g_data->t_sleep = 0;
 	g_data->nb_cycles = 0;
-    g_data->thread_count = 0;
+	g_data->thread_count = 0;
 	g_data->thread_dead = 0;
 	g_data->th_end = 0;
 	return (0);
@@ -45,21 +45,21 @@ long	get_ctime(void)
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
-void print_logs(t_info *g_data, long start_time, char *order)
+void	print_logs(t_info *g_data, long start_time, char *order)
 {
-    long now;
-    long elapsed_time;
+	long now;
+	long elapsed_time;
 
-    now = get_ctime();
-    elapsed_time = now - start_time;
+	now = get_ctime();
+	elapsed_time = now - start_time;
 
-    pthread_mutex_lock(&g_data->writing);
+	pthread_mutex_lock(&g_data->writing);
 	if (ft_strcmp(order, "died") == 0 && g_data->thread_dead == 0)
 	{
 		g_data->thread_dead = 1;
 		printf("%ld %d %s\n", elapsed_time, g_data->thread_count, order);
 	}
-    else if (g_data->thread_dead == 0)
-        printf("%ld %d %s\n", elapsed_time, g_data->thread_count, order);
-    pthread_mutex_unlock(&g_data->writing);
+	else if (g_data->thread_dead == 0)
+		printf("%ld %d %s\n", elapsed_time, g_data->thread_count, order);
+	pthread_mutex_unlock(&g_data->writing);
 }

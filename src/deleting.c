@@ -6,11 +6,11 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 16:39:27 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/10 19:21:23 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/11 19:46:09 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "../philosophers.h"
 
 void	del_and_free(t_info *g_data, t_philo *philo_data, int part)
 {

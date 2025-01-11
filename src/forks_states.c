@@ -6,11 +6,11 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 19:34:00 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/10 18:33:54 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/11 19:46:09 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "../philosophers.h"
 
 int	forks_available(t_info *g_data, int thread_num, int part)
 {

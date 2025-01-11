@@ -6,11 +6,11 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 18:20:40 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/09 19:18:36 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/11 19:46:09 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "../philosophers.h"
 
 void	forks_creation(t_info *g_data)
 {
@@ -55,6 +55,6 @@ void	single_thread(t_info *g_data, t_philo *philo_data)
 		if (pthread_create(&philo_data[i].threads, NULL, &philo, g_data) != 0)
 			return (perror("Failed to create a thread"), 2);
 		if (pthread_detach(philo_data[i].threads) != 0)
-            return (perror("Failed to detach thread"), 2);
+			return (perror("Failed to detach thread"), 2);
 	}
 }

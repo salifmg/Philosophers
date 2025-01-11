@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:03:25 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/10 18:52:58 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/11 18:20:47 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,33 @@ typedef struct s_philo
 	pthread_t		threads;
 }						t_philo;
 
+long	get_ctime(void);
+
+int	ft_strcmp(char *s1, char *s2);
 int	ft_atoi(const char *str);
 int	is_char(const char *str);
 int	is_num(const char str);
+int	init_lists(t_info *g_data);
 
+int	sleeping(t_info *g_data, int thread_num);
+int	eating(t_info *g_data, int thread_num);
+
+int	single_philosopher(t_info *g_data, t_philo *philo_data);
+int	philosophers_creation(t_info *g_data, t_philo *philo_data);
+int	philo_actions(t_info *g_data, int thread_num);
+
+int	single_fork(t_info *g_data, int thread_num);
+int	taking_forks(t_info *g_data, int thread_num);
+int	leaving_forks(t_info *g_data, int thread_num);
+int	forks_available(t_info *g_data, int thread_num, int part);
+
+int	check_death(t_info *g_data, long last_meal_time);
+int	check_philos(t_info *g_data, int i);
+
+void	delete_mutexes(t_info *g_data);
+void	delete_threads(t_info *g_data, t_philo *philo_data);
+void	del_and_free(t_info *g_data, t_philo *philo_data, int part);
+void	print_logs(t_info *g_data, long start_time, char *order);
 void	*philo(void *param);
-
-time_t	get_ctime(void);
 
 #endif
