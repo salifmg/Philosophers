@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 16:28:43 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/11 19:46:09 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/12 16:32:31 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,8 @@ int	init_lists(t_info *g_data)
 	g_data->time_passed = malloc(sizeof(long) * g_data->nb_philo);
 	if (!g_data->time_passed)
 		return (1);
-	while (i < g_data->nb_philo)
-	{
+	while (i++ < g_data->nb_philo)
 		g_data->time_passed[i] = 0;
-		i++;
-	}
 	g_data->start_time = 0;
 	g_data->nb_philo = 0;
 	g_data->t_die = 0;
@@ -47,12 +44,11 @@ long	get_ctime(void)
 
 void	print_logs(t_info *g_data, long start_time, char *order)
 {
-	long now;
-	long elapsed_time;
+	long	now;
+	long	elapsed_time;
 
 	now = get_ctime();
 	elapsed_time = now - start_time;
-
 	pthread_mutex_lock(&g_data->writing);
 	if (ft_strcmp(order, "died") == 0 && g_data->thread_dead == 0)
 	{

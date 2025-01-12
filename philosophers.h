@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:03:25 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/11 18:20:47 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/12 17:25:47 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,22 +21,22 @@
 # include <pthread.h>
 # include <sys/time.h>
 
-typedef struct timeval t_timeval;
+typedef struct timeval	t_timeval;
 
 typedef struct s_info
 {
-	long	*time_passed;
-	long	start_time;
+	long			*time_passed;
+	long			start_time;
 
-	int		*forks_status;
-	int		nb_philo;
-	int		t_die;
-	int		t_eat;
-	int		t_sleep;
-	int		nb_cycles;
-	int		thread_count;
-	int		thread_dead;
-	int		th_end;
+	int				*forks_status;
+	int				nb_philo;
+	int				t_die;
+	int				t_eat;
+	int				t_sleep;
+	int				nb_cycles;
+	int				thread_count;
+	int				thread_dead;
+	int				th_end;
 
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	*writing;
@@ -50,29 +50,32 @@ typedef struct s_philo
 
 long	get_ctime(void);
 
-int	ft_strcmp(char *s1, char *s2);
-int	ft_atoi(const char *str);
-int	is_char(const char *str);
-int	is_num(const char str);
-int	init_lists(t_info *g_data);
+int		ft_strcmp(char *s1, char *s2);
+int		ft_atoi(const char *str);
+int		is_char(const char *str);
+int		is_num(const char str);
+int		init_lists(t_info *g_data);
 
-int	sleeping(t_info *g_data, int thread_num);
-int	eating(t_info *g_data, int thread_num);
+int		sleeping(t_info *g_data, int th_nbr);
+int		eating(t_info *g_data, int th_nbr);
 
-int	single_philosopher(t_info *g_data, t_philo *philo_data);
-int	philosophers_creation(t_info *g_data, t_philo *philo_data);
-int	philo_actions(t_info *g_data, int thread_num);
+int		threads_creation(t_info *g_data, t_philo *philo_data);
+int		delete_threads(t_info *g_data, t_philo *philo_data);
+int		single_thread(t_info *g_data, t_philo *philo_data);
+int		single_philosopher(t_info *g_data, t_philo *philo_data);
+int		philosophers_creation(t_info *g_data, t_philo *philo_data);
+int		philo_actions(t_info *g_data, int th_nbr);
 
-int	single_fork(t_info *g_data, int thread_num);
-int	taking_forks(t_info *g_data, int thread_num);
-int	leaving_forks(t_info *g_data, int thread_num);
-int	forks_available(t_info *g_data, int thread_num, int part);
+int		forks_creation(t_info *g_data);
+int		single_fork(t_info *g_data, int th_nbr);
+int		taking_forks(t_info *g_data, int th_nbr);
+int		leaving_forks(t_info *g_data, int th_nbr);
+int		forks_availabity(t_info *g_data, int th_nbr, int part);
 
-int	check_death(t_info *g_data, long last_meal_time);
-int	check_philos(t_info *g_data, int i);
+int		check_death(t_info *g_data, long last_meal_time);
+int		check_philos(t_info *g_data, int i);
 
 void	delete_mutexes(t_info *g_data);
-void	delete_threads(t_info *g_data, t_philo *philo_data);
 void	del_and_free(t_info *g_data, t_philo *philo_data, int part);
 void	print_logs(t_info *g_data, long start_time, char *order);
 void	*philo(void *param);

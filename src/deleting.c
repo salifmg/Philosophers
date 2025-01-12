@@ -6,11 +6,41 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 16:39:27 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/11 19:46:09 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/12 17:27:34 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philosophers.h"
+
+int	delete_threads(t_info *g_data, t_philo *philo_data)
+{
+	int	i;
+
+	i = 0;
+	while (i < g_data->nb_philo)
+	{
+		if ((pthread_join(philo_data[i++].threads, NULL) != 0))
+		{
+			perror("Failed to join all threads");
+			return (1);
+		}
+	}
+	return (0);
+}
+
+void	delete_mutexes(t_info *g_data)
+{
+	int	i;
+
+	i = 0;
+	pthread_mutex_destroy(&g_data->sync_order);
+	pthread_mutex_destroy(g_data->writing);
+	while (i < g_data->nb_philo)
+	{
+		pthread_mutex_destroy(&g_data->forks[i]);
+		i++;
+	}
+}
 
 void	del_and_free(t_info *g_data, t_philo *philo_data, int part)
 {
@@ -26,34 +56,5 @@ void	del_and_free(t_info *g_data, t_philo *philo_data, int part)
 		delete_mutexes(g_data);
 		free(g_data->forks);
 		free(g_data->forks_status);
-	}
-}
-
-void	delete_threads(t_info *g_data, t_philo *philo_data)
-{
-	int	i;
-
-	i = 0;
-	while (i < g_data->nb_philo)
-	{
-		if ((pthread_join(philo_data[i++].threads, NULL) != 0))
-		{
-			perror("Failed to join all threads");
-			return (3);
-		}
-	}
-}
-
-void	delete_mutexes(t_info *g_data)
-{
-	int	i;
-
-	i = 0;
-	pthread_mutex_destroy(&g_data->sync_order);
-	pthread_mutex_destroy(&g_data->writing);
-	while (i < g_data->nb_philo)
-	{
-		pthread_mutex_destroy(&g_data->forks[i]);
-		i++;
 	}
 }

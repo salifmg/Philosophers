@@ -6,13 +6,13 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 18:20:40 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/11 19:46:09 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/12 17:15:20 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philosophers.h"
 
-void	forks_creation(t_info *g_data)
+int	forks_creation(t_info *g_data)
 {
 	int	i;
 
@@ -27,9 +27,10 @@ void	forks_creation(t_info *g_data)
 		g_data->forks_status[i] = 0;
 		i++;
 	}
+	return (0);
 }
 
-void	threads_creation(t_info *g_data, t_philo *philo_data)
+int	threads_creation(t_info *g_data, t_philo *philo_data)
 {
 	int	i;
 
@@ -39,11 +40,12 @@ void	threads_creation(t_info *g_data, t_philo *philo_data)
 	{
 		g_data->thread_count += 1;
 		if (pthread_create(&philo_data[i].threads, NULL, &philo, g_data) != 0)
-			return (perror("Failed to create a thread"), 2);
+			return (perror("Failed to create a thread"), 1);
 	}
+	return (0);
 }
 
-void	single_thread(t_info *g_data, t_philo *philo_data)
+int	single_thread(t_info *g_data, t_philo *philo_data)
 {
 	int	i;
 
@@ -53,8 +55,9 @@ void	single_thread(t_info *g_data, t_philo *philo_data)
 	{
 		g_data->thread_count += 1;
 		if (pthread_create(&philo_data[i].threads, NULL, &philo, g_data) != 0)
-			return (perror("Failed to create a thread"), 2);
+			return (perror("Failed to create a thread"), 1);
 		if (pthread_detach(philo_data[i].threads) != 0)
-			return (perror("Failed to detach thread"), 2);
+			return (perror("Failed to detach thread"), 1);
 	}
+	return (0);
 }

@@ -6,12 +6,19 @@
 #    By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/11 11:18:50 by smagassa          #+#    #+#              #
-#    Updated: 2024/11/22 14:19:03 by smagassa         ###   ########.fr        #
+#    Updated: 2025/01/12 17:03:50 by smagassa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS =	main.c        \
-
+SRCS =	src/main.c        \
+		src/actions.c      \
+		src/creations.c     \
+		src/deaths.c       \
+		src/deleting.c     \
+		src/forks_states.c \
+		src/init_and_print.c \
+		src/libft.c        \
+		src/philo.c
 
 NAME = philosophers
 CC = cc
@@ -26,7 +33,6 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -I $(DEPS) //enleve ptetre -o
-
 
 %.o : %.c
 	$(CC) $(CFLAGS) -c $< -o $@ -I $(DEPS)

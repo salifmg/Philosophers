@@ -6,16 +6,16 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:27:11 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/11 19:46:09 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/12 17:25:47 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philosophers.h"
 
-int	eating(t_info *g_data, int thread_num)
+int	eating(t_info *g_data, int th_nbr)
 {
 	long	t_left_eat;
-	
+
 	t_left_eat = g_data->t_eat;
 	print_logs(g_data, g_data->start_time, "is eating");
 	while (t_left_eat && g_data->thread_dead == 0)
@@ -32,15 +32,15 @@ int	eating(t_info *g_data, int thread_num)
 		}
 	}
 	if (g_data->thread_dead == 1)
-		return (leaving_forks(g_data, thread_num));
-	g_data->time_passed[thread_num] = get_ctime();
+		return (leaving_forks(g_data, th_nbr));
+	g_data->time_passed[th_nbr] = get_ctime();
 	return (0);
 }
 
-int	sleeping(t_info *g_data, int thread_num)
+int	sleeping(t_info *g_data, int th_nbr)
 {
 	long	t_left_sleep;
-	
+
 	t_left_sleep = g_data->t_sleep;
 	print_logs(g_data, g_data->start_time, "is sleeping");
 	while (t_left_sleep && g_data->thread_dead == 0)
@@ -57,7 +57,7 @@ int	sleeping(t_info *g_data, int thread_num)
 		}
 	}
 	if (g_data->thread_dead == 1)
-		return (leaving_forks(g_data, thread_num));
+		return (leaving_forks(g_data, th_nbr));
 	return (0);
 }
 
@@ -65,23 +65,23 @@ void	*philo(void *param)
 {
 	long		loop_count;
 	t_info		*g_data;
-	int			thread_num;
+	int			th_nbr;
 
 	loop_count = 0;
 	g_data = (t_info *)param;
-	thread_num = g_data->thread_count;
+	th_nbr = g_data->thread_count;
 	pthread_mutex_lock(&g_data->sync_order);
 	usleep(100); //plus gros ou ptit
 	pthread_mutex_unlock(&g_data->sync_order);
-	g_data->time_passed[thread_num] = get_ctime();
+	g_data->time_passed[th_nbr] = get_ctime();
 	while (1)
 	{
-		if (philo_actions(g_data, thread_num) == 1)
-			break;
+		if (philo_actions(g_data, th_nbr) == 1)
+			break ;
 		if (g_data->nb_cycles && ++loop_count == g_data->nb_cycles)
 		{
 			g_data->th_end += 1;
-			break;
+			break ;
 		}
 	}
 	if (g_data->thread_dead == 1)
@@ -97,7 +97,11 @@ int	philosophers_creation(t_info *g_data, t_philo *philo_data)
 		return (1);
 	if (forks_creation(g_data) == 1)
 		return (1);
-	threads_creation(g_data, philo_data);
+	if (threads_creation(g_data, philo_data) == 1)
+	{
+		del_and_free(g_data, philo_data, 1);
+		return (1);
+	}
 	if (check_philos(g_data, 0) == 1)
 	{
 		del_and_free(g_data, philo_data, 1);
@@ -115,7 +119,11 @@ int	single_philosopher(t_info *g_data, t_philo *philo_data)
 		return (1);
 	if (forks_creation(g_data) == 1)
 		return (1);
-	single_thread(g_data, philo_data);
+	if (single_thread(g_data, philo_data) == 1)
+	{
+		del_and_free(g_data, philo_data, 2);
+		return (1);
+	}
 	if (check_philos(g_data, 0) == 1)
 	{
 		del_and_free(g_data, philo_data, 2);
