@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:27:11 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/12 17:25:47 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/13 17:00:15 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	eating(t_info *g_data, int th_nbr)
 	long	t_left_eat;
 
 	t_left_eat = g_data->t_eat;
-	print_logs(g_data, g_data->start_time, "is eating");
+	print_logs(g_data, th_nbr, g_data->start_time, "is eating");
 	while (t_left_eat && g_data->thread_dead == 0)
 	{
 		if (9000 < t_left_eat)
@@ -42,7 +42,7 @@ int	sleeping(t_info *g_data, int th_nbr)
 	long	t_left_sleep;
 
 	t_left_sleep = g_data->t_sleep;
-	print_logs(g_data, g_data->start_time, "is sleeping");
+	print_logs(g_data, th_nbr, g_data->start_time, "is sleeping");
 	while (t_left_sleep && g_data->thread_dead == 0)
 	{
 		if (9000 < t_left_sleep)
@@ -84,15 +84,13 @@ void	*philo(void *param)
 			break ;
 		}
 	}
-	if (g_data->thread_dead == 1)
-		return (1);
 	return (0);
 }
 
 int	philosophers_creation(t_info *g_data, t_philo *philo_data)
 {
 	pthread_mutex_init(&g_data->sync_order, NULL);
-	pthread_mutex_init(&g_data->writing, NULL);
+	pthread_mutex_init(g_data->writing, NULL);
 	if (init_lists(g_data) == 1)
 		return (1);
 	if (forks_creation(g_data) == 1)
@@ -102,7 +100,7 @@ int	philosophers_creation(t_info *g_data, t_philo *philo_data)
 		del_and_free(g_data, philo_data, 1);
 		return (1);
 	}
-	if (check_philos(g_data, 0) == 1)
+	if (check_philos(g_data) == 1)
 	{
 		del_and_free(g_data, philo_data, 1);
 		return (1);
@@ -114,7 +112,7 @@ int	philosophers_creation(t_info *g_data, t_philo *philo_data)
 int	single_philosopher(t_info *g_data, t_philo *philo_data)
 {
 	pthread_mutex_init(&g_data->sync_order, NULL);
-	pthread_mutex_init(&g_data->writing, NULL);
+	pthread_mutex_init(g_data->writing, NULL);
 	if (init_lists(g_data) == 1)
 		return (1);
 	if (forks_creation(g_data) == 1)
@@ -124,7 +122,7 @@ int	single_philosopher(t_info *g_data, t_philo *philo_data)
 		del_and_free(g_data, philo_data, 2);
 		return (1);
 	}
-	if (check_philos(g_data, 0) == 1)
+	if (check_philos(g_data) == 1)
 	{
 		del_and_free(g_data, philo_data, 2);
 		return (1);

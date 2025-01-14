@@ -6,7 +6,7 @@
 #    By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/11 11:18:50 by smagassa          #+#    #+#              #
-#    Updated: 2025/01/12 17:03:50 by smagassa         ###   ########.fr        #
+#    Updated: 2025/01/14 00:49:45 by smagassa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,16 +32,16 @@ OBJS = $(SRCS:%.c=%.o)
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -I $(DEPS) //enleve ptetre -o
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -I $(DEPS)
 
 %.o : %.c
 	$(CC) $(CFLAGS) -c $< -o $@ -I $(DEPS)
 
 clean:
-	@$(RM) $(OBJS) $(OBJ_SERVER) 
+	@$(RM) $(OBJS)
 
 fclean: clean
-	@$(RM) $(CLIENT) $(SERVER) 
+	@$(RM) $(NAME)
 
 re: fclean all
 

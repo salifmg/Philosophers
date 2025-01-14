@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 16:28:43 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/12 16:32:31 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/13 16:47:42 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,20 +42,20 @@ long	get_ctime(void)
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
-void	print_logs(t_info *g_data, long start_time, char *order)
+void	print_logs(t_info *g_data, int th_nbr, long start_time, char *order)
 {
 	long	now;
 	long	elapsed_time;
 
 	now = get_ctime();
 	elapsed_time = now - start_time;
-	pthread_mutex_lock(&g_data->writing);
+	pthread_mutex_lock(g_data->writing);
 	if (ft_strcmp(order, "died") == 0 && g_data->thread_dead == 0)
 	{
 		g_data->thread_dead = 1;
-		printf("%ld %d %s\n", elapsed_time, g_data->thread_count, order);
+		printf("%ld %d %s\n", elapsed_time, th_nbr, order);
 	}
 	else if (g_data->thread_dead == 0)
-		printf("%ld %d %s\n", elapsed_time, g_data->thread_count, order);
-	pthread_mutex_unlock(&g_data->writing);
+		printf("%ld %d %s\n", elapsed_time, th_nbr, order);
+	pthread_mutex_unlock(g_data->writing);
 }
