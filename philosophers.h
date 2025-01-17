@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:03:25 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/17 16:03:23 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/17 20:48:42 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,21 @@ typedef struct s_info
 	int				th_end;
 
 	pthread_mutex_t	*forks;
-	pthread_mutex_t	*writing;
+	pthread_mutex_t	writing;
 	pthread_mutex_t	sync_order;
+	pthread_mutex_t	total_ended_th;
 }						t_info;
 
 typedef struct s_philo
 {
 	pthread_t		threads;
 }						t_philo;
+
+typedef struct s_thread_param
+{
+	int				th_nbr;
+	t_info			*g_data;
+}				t_thread_param;
 
 long	get_ctime(void);
 
@@ -71,6 +78,7 @@ int		single_fork(t_info *g_data, int th_nbr);
 int		taking_forks(t_info *g_data, int th_nbr);
 int		leaving_forks(t_info *g_data, int th_nbr);
 int		forks_availabity(t_info *g_data, int th_nbr, int part);
+int		prev_fork_index(t_info *g_data, int th_nbr);
 
 int		check_death(t_info *g_data, long last_meal_time, int th_nbr);
 int		check_philos(t_info *g_data);

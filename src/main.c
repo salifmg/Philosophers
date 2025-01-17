@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 17:05:09 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/17 15:38:44 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/17 18:00:47 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	args_lists(t_info *g_data, int ac, char **param)
 	{
 		if (ft_atoi(param[i]) <= 0)
 		{
-			write(2, "ONLY INSERT POSITIVE NUMBERS AS ARGS", 36);
+			write(2, "ONLY INSERT POSITIVE NUMBERS AS ARGS, NO SIGNS\n", 46);
 			exit(1);
 		}
 	}
@@ -42,7 +42,8 @@ int	main(int ac, char **av)
 
 	if (ac != 5 && ac != 6)
 	{
-		write(2, "<Nb_philo> <T_die> <T_eat> <T_sleep> [Nb_cycles]", 49);
+		write(2, "INPUT <>, [] IS OPTIONNAL\n", 26);
+		write(2, "<Nb_philo> <T_die> <T_eat> <T_sleep> [Nb_cycles]\n", 49);
 		return (1);
 	}
 	args_lists(&g_data, ac, av);

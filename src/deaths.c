@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 17:45:10 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/17 16:29:56 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/17 18:46:39 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,21 @@ int	check_philos(t_info *g_data)
 	int	i;
 
 	i = 0;
-	while (g_data->th_end != g_data->nb_philo && check_death(g_data,
-			g_data->time_passed[i], i) == 0)
+	while (1)
 	{
+		pthread_mutex_lock(&g_data->total_ended_th);
+		if (g_data->th_end == g_data->nb_philo)
+		{
+			pthread_mutex_unlock(&g_data->total_ended_th);
+			return (0);
+		}
+		pthread_mutex_unlock(&g_data->total_ended_th);
+		if (check_death(g_data, g_data->time_passed[i], i) == 1)
+			break ;
 		if (++i == g_data->nb_philo)
 			i = 0;
 		usleep(50); //plus gros ou ptit
 	}
-	if (g_data->th_end == g_data->nb_philo)
-		return (0);
 	usleep(10000); //plus gros ou ptit
 	return (1);
 }

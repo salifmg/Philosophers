@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 16:28:43 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/17 15:38:44 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/17 19:47:11 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ int	init_lists(t_info *g_data)
 	g_data->time_passed = malloc(sizeof(long) * g_data->nb_philo);
 	if (!g_data->time_passed)
 		return (1);
-	while (i++ < g_data->nb_philo)
-		g_data->time_passed[i] = 0;
+	while (i < g_data->nb_philo)
+		g_data->time_passed[i++] = 0;
 	g_data->start_time = 0;
 	g_data->thread_count = 0;
 	g_data->thread_dead = 0;
@@ -44,7 +44,7 @@ void	print_logs(t_info *g_data, int th_nbr, long start_time, char *order)
 
 	now = get_ctime();
 	elapsed_time = now - start_time;
-	pthread_mutex_lock(g_data->writing);
+	pthread_mutex_lock(&g_data->writing);
 	if (ft_strcmp(order, "died") == 0 && g_data->thread_dead == 0)
 	{
 		g_data->thread_dead = 1;
@@ -52,5 +52,5 @@ void	print_logs(t_info *g_data, int th_nbr, long start_time, char *order)
 	}
 	else if (g_data->thread_dead == 0)
 		printf("%ld %d %s\n", elapsed_time, th_nbr, order);
-	pthread_mutex_unlock(g_data->writing);
+	pthread_mutex_unlock(&g_data->writing);
 }

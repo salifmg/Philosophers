@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 19:34:00 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/17 16:26:32 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/17 19:31:19 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 void	leaving_taken_fork(t_info *g_data, int th_nbr)
 {
-	pthread_mutex_unlock(&g_data->forks[(th_nbr + 1) % g_data->nb_philo]);
-	g_data->forks_status[(th_nbr + 1) % g_data->nb_philo] = 0;
+	pthread_mutex_unlock(&g_data->forks[th_nbr % g_data->nb_philo]);
+	g_data->forks_status[th_nbr % g_data->nb_philo] = 0;
 }
 
 int	forks_availabity(t_info *g_data, int th_nbr, int part)
 {
 	if (part == 1)
 	{
-		while (g_data->forks_status[(th_nbr + 1) % g_data->nb_philo] == 1)
+		while (g_data->forks_status[th_nbr % g_data->nb_philo] == 1)
 		{
 			if (g_data->thread_dead == 1)
 				return (1);
@@ -31,7 +31,7 @@ int	forks_availabity(t_info *g_data, int th_nbr, int part)
 	}
 	else if (part == 2)
 	{
-		while (g_data->forks_status[th_nbr] == 1)
+		while (g_data->forks_status[prev_fork_index(g_data, th_nbr)] == 1)
 		{
 			if (g_data->thread_dead == 1)
 			{
@@ -46,15 +46,15 @@ int	forks_availabity(t_info *g_data, int th_nbr, int part)
 
 int	leaving_forks(t_info *g_data, int th_nbr)
 {
-	if (g_data->forks_status[(th_nbr + 1) % g_data->nb_philo] == 1)
+	if (g_data->forks_status[th_nbr % g_data->nb_philo] == 1)
 	{
-		pthread_mutex_unlock(&g_data->forks[(th_nbr + 1) % g_data->nb_philo]);
-		g_data->forks_status[(th_nbr + 1) % g_data->nb_philo] = 0;
+		pthread_mutex_unlock(&g_data->forks[th_nbr % g_data->nb_philo]);
+		g_data->forks_status[th_nbr % g_data->nb_philo] = 0;
 	}
-	if (g_data->forks_status[th_nbr] == 1)
+	if (g_data->forks_status[prev_fork_index(g_data, th_nbr)] == 1)
 	{
-		pthread_mutex_unlock(&g_data->forks[th_nbr]);
-		g_data->forks_status[th_nbr] = 0;
+		pthread_mutex_unlock(&g_data->forks[prev_fork_index(g_data, th_nbr)]);
+		g_data->forks_status[prev_fork_index(g_data, th_nbr)] = 0;
 	}
 	if (g_data->thread_dead == 1)
 		return (1);
@@ -69,8 +69,8 @@ int	taking_forks(t_info *g_data, int th_nbr)
 		return (single_fork(g_data, th_nbr));
 	if (forks_availabity(g_data, th_nbr, 1) == 1)
 		return (1);
-	pthread_mutex_lock(&g_data->forks[(th_nbr + 1) % g_data->nb_philo]);
-	g_data->forks_status[(th_nbr + 1) % g_data->nb_philo] = 1;
+	pthread_mutex_lock(&g_data->forks[(th_nbr) % g_data->nb_philo]);
+	g_data->forks_status[(th_nbr) % g_data->nb_philo] = 1;
 	print_logs(g_data, th_nbr, g_data->start_time, "has taken a fork");
 	if (g_data->thread_dead == 1)
 	{
@@ -79,8 +79,8 @@ int	taking_forks(t_info *g_data, int th_nbr)
 	}
 	if (forks_availabity(g_data, th_nbr, 2) == 1)
 		return (1);
-	pthread_mutex_lock(&g_data->forks[th_nbr]);
-	g_data->forks_status[th_nbr] = 1;
+	pthread_mutex_lock(&g_data->forks[prev_fork_index(g_data, th_nbr)]);
+	g_data->forks_status[prev_fork_index(g_data, th_nbr)] = 1;
 	print_logs(g_data, th_nbr, g_data->start_time, "has taken a fork");
 	if (g_data->thread_dead == 1)
 		return (leaving_forks(g_data, th_nbr));
@@ -89,10 +89,10 @@ int	taking_forks(t_info *g_data, int th_nbr)
 
 int	single_fork(t_info *g_data, int th_nbr)
 {
-	pthread_mutex_lock(&g_data->forks[th_nbr]);
+	pthread_mutex_lock(&g_data->forks[th_nbr - 1]);
 	print_logs(g_data, th_nbr, g_data->start_time, "has taken a fork");
 	while (g_data->thread_dead == 0)
 		usleep(50);
-	pthread_mutex_unlock(&g_data->forks[th_nbr]);
+	pthread_mutex_unlock(&g_data->forks[th_nbr - 1]);
 	return (1);
 }

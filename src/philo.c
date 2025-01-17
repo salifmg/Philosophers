@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:27:11 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/17 15:38:44 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/17 20:55:26 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	eating(t_info *g_data, int th_nbr)
 	}
 	if (g_data->thread_dead == 1)
 		return (leaving_forks(g_data, th_nbr));
-	g_data->time_passed[th_nbr] = get_ctime();
+	g_data->time_passed[prev_fork_index(g_data, th_nbr)] = get_ctime();
 	return (0);
 }
 
@@ -50,7 +50,7 @@ int	sleeping(t_info *g_data, int th_nbr)
 			usleep(9000);
 			t_left_sleep -= 9;
 		}
-		else
+		else if (t_left_sleep > 0)
 		{
 			usleep(t_left_sleep * 1000);
 			t_left_sleep -= t_left_sleep;
@@ -63,24 +63,29 @@ int	sleeping(t_info *g_data, int th_nbr)
 
 void	*philo(void *param)
 {
-	long		loop_count;
-	t_info		*g_data;
-	int			th_nbr;
+	long			loop_count;
+	t_info			*g_data;
+	t_thread_param	*thread_param;
+	int				th_nbr;
 
 	loop_count = 0;
-	g_data = (t_info *)param;
-	th_nbr = g_data->thread_count;
+	thread_param = (t_thread_param *)param;
+	th_nbr = thread_param->th_nbr;
+	g_data = thread_param->g_data;
+	free(param);
 	pthread_mutex_lock(&g_data->sync_order);
 	usleep(100); //plus gros ou ptit
 	pthread_mutex_unlock(&g_data->sync_order);
-	g_data->time_passed[th_nbr] = get_ctime();
+	g_data->time_passed[prev_fork_index(g_data, th_nbr)] = get_ctime();
 	while (1)
 	{
 		if (philo_actions(g_data, th_nbr) == 1)
 			break ;
 		if (g_data->nb_cycles && ++loop_count == g_data->nb_cycles)
 		{
+			pthread_mutex_lock(&g_data->total_ended_th);
 			g_data->th_end += 1;
+			pthread_mutex_unlock(&g_data->total_ended_th);
 			break ;
 		}
 	}
@@ -90,7 +95,8 @@ void	*philo(void *param)
 int	philosophers_creation(t_info *g_data, t_philo *philo_data)
 {
 	pthread_mutex_init(&g_data->sync_order, NULL);
-	pthread_mutex_init(g_data->writing, NULL);
+	pthread_mutex_init(&g_data->writing, NULL);
+	pthread_mutex_init(&g_data->total_ended_th, NULL);
 	if (init_lists(g_data) == 1)
 		return (1);
 	if (forks_creation(g_data) == 1)
@@ -112,7 +118,7 @@ int	philosophers_creation(t_info *g_data, t_philo *philo_data)
 int	single_philosopher(t_info *g_data, t_philo *philo_data)
 {
 	pthread_mutex_init(&g_data->sync_order, NULL);
-	pthread_mutex_init(g_data->writing, NULL);
+	pthread_mutex_init(&g_data->writing, NULL);
 	if (init_lists(g_data) == 1)
 		return (1);
 	if (forks_creation(g_data) == 1)

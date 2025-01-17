@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 18:20:40 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/12 17:15:20 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/17 20:55:26 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,24 @@ int	forks_creation(t_info *g_data)
 
 int	threads_creation(t_info *g_data, t_philo *philo_data)
 {
-	int	i;
+	int				i;
+	t_thread_param	*params;
 
 	i = 0;
 	g_data->start_time = get_ctime();
 	while (i < g_data->nb_philo)
 	{
-		g_data->thread_count += 1;
-		if (pthread_create(&philo_data[i].threads, NULL, &philo, g_data) != 0)
+		params = malloc(sizeof(t_thread_param));
+		if (!params)
+			return (perror("Failed to allocate memory for thread params"), 1);
+		params->th_nbr = i;
+		params->g_data = g_data;
+		if (pthread_create(&philo_data[i].threads, NULL, &philo, params) != 0)
+		{
+			free(params);
 			return (perror("Failed to create a thread"), 1);
+		}
+		i++;
 	}
 	return (0);
 }
@@ -60,4 +69,9 @@ int	single_thread(t_info *g_data, t_philo *philo_data)
 			return (perror("Failed to detach thread"), 1);
 	}
 	return (0);
+}
+
+int	prev_fork_index(t_info *g_data, int th_nbr)
+{
+	return (((th_nbr - 1) + g_data->nb_philo) % g_data->nb_philo);
 }

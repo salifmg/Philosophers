@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 16:39:27 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/12 17:27:34 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/17 20:55:26 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ void	delete_mutexes(t_info *g_data)
 
 	i = 0;
 	pthread_mutex_destroy(&g_data->sync_order);
-	pthread_mutex_destroy(g_data->writing);
+	pthread_mutex_destroy(&g_data->writing);
+	pthread_mutex_destroy(&g_data->total_ended_th);
 	while (i < g_data->nb_philo)
 	{
 		pthread_mutex_destroy(&g_data->forks[i]);
