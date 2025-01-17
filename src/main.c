@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 17:05:09 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/11 19:46:09 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/17 15:38:44 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ void	args_lists(t_info *g_data, int ac, char **param)
 	g_data->t_sleep = ft_atoi(param[4]);
 	if (ac == 6)
 		g_data->nb_cycles = ft_atoi(param[5]);
+	else
+		g_data->nb_cycles = 0;
 }
 
 int	main(int ac, char **av)
@@ -44,7 +46,7 @@ int	main(int ac, char **av)
 		return (1);
 	}
 	args_lists(&g_data, ac, av);
-	philo_data = malloc(sizeof(t_philo) * g_data.nb_philo);
+	philo_data = malloc(sizeof(t_info) * g_data.nb_philo);
 	if (!philo_data)
 		return (perror("Failed to allocate memory for philosophers"), 1);
 	if (g_data.nb_philo == 1)

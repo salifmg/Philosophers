@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 16:28:43 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/13 16:47:42 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/17 15:38:44 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,6 @@ int	init_lists(t_info *g_data)
 	while (i++ < g_data->nb_philo)
 		g_data->time_passed[i] = 0;
 	g_data->start_time = 0;
-	g_data->nb_philo = 0;
-	g_data->t_die = 0;
-	g_data->t_eat = 0;
-	g_data->t_sleep = 0;
-	g_data->nb_cycles = 0;
 	g_data->thread_count = 0;
 	g_data->thread_dead = 0;
 	g_data->th_end = 0;

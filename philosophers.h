@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:03:25 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/13 16:44:41 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/17 16:03:23 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ int		check_death(t_info *g_data, long last_meal_time, int th_nbr);
 int		check_philos(t_info *g_data);
 
 void	delete_mutexes(t_info *g_data);
+void	leaving_taken_fork(t_info *g_data, int th_nbr);
 void	del_and_free(t_info *g_data, t_philo *philo_data, int part);
 void	print_logs(t_info *g_data, int th_nbr, long start_time, char *order);
 void	*philo(void *param);
