@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 18:20:40 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/17 20:55:26 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/20 13:01:28 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,22 +33,17 @@ int	forks_creation(t_info *g_data)
 int	threads_creation(t_info *g_data, t_philo *philo_data)
 {
 	int				i;
-	t_thread_param	*params;
 
 	i = 0;
 	g_data->start_time = get_ctime();
 	while (i < g_data->nb_philo)
 	{
-		params = malloc(sizeof(t_thread_param));
-		if (!params)
-			return (perror("Failed to allocate memory for thread params"), 1);
-		params->th_nbr = i;
-		params->g_data = g_data;
-		if (pthread_create(&philo_data[i].threads, NULL, &philo, params) != 0)
-		{
-			free(params);
+		pthread_mutex_lock(&g_data->sync_order);
+		g_data->thread_count = i;
+		pthread_mutex_unlock(&g_data->sync_order);
+		printf("thread_count: %d\n", g_data->thread_count);
+		if (pthread_create(&philo_data[i].threads, NULL, &philo, g_data) != 0)
 			return (perror("Failed to create a thread"), 1);
-		}
 		i++;
 	}
 	return (0);
@@ -62,7 +57,9 @@ int	single_thread(t_info *g_data, t_philo *philo_data)
 	g_data->start_time = get_ctime();
 	while (i < g_data->nb_philo)
 	{
+		pthread_mutex_lock(&g_data->sync_order);
 		g_data->thread_count += 1;
+		pthread_mutex_unlock(&g_data->sync_order);
 		if (pthread_create(&philo_data[i].threads, NULL, &philo, g_data) != 0)
 			return (perror("Failed to create a thread"), 1);
 		if (pthread_detach(philo_data[i].threads) != 0)
@@ -71,7 +68,16 @@ int	single_thread(t_info *g_data, t_philo *philo_data)
 	return (0);
 }
 
-int	prev_fork_index(t_info *g_data, int th_nbr)
+int	next_fork_index(t_info *g_data, int th_nbr)
 {
-	return (((th_nbr - 1) + g_data->nb_philo) % g_data->nb_philo);
+	return ((th_nbr + 1) % g_data->nb_philo);
+}
+
+void	ft_usleep(long ms)
+{
+	long	begin;
+
+	begin = get_ctime();
+	while (get_ctime() - begin < ms)
+		usleep(10);
 }

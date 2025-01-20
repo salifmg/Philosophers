@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 17:45:10 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/17 18:46:39 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/20 13:11:54 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,16 @@ int	check_death(t_info *g_data, long last_meal_time, int th_nbr)
 	elapsed_time = now - g_data->start_time;
 	if (now - last_meal_time >= g_data->t_die)
 	{
-		print_logs(g_data, ++th_nbr, elapsed_time, "died");
+		print_logs(g_data, th_nbr, elapsed_time, "died");
 		return (1);
 	}
-	else if (g_data->thread_dead)
+	pthread_mutex_lock(&g_data->check_dead);
+	if (g_data->thread_dead == 1)
+	{
+		pthread_mutex_unlock(&g_data->check_dead);
 		return (1);
+	}
+	pthread_mutex_unlock(&g_data->check_dead);
 	return (0);
 }
 

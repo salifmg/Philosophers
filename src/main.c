@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 17:05:09 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/17 18:00:47 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/20 10:43:18 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ int	main(int ac, char **av)
 
 	if (ac != 5 && ac != 6)
 	{
-		write(2, "INPUT <>, [] IS OPTIONNAL\n", 26);
+		write(2, "OBLIGATORY <>\n", 14);
+		write(2, "OPTIONNAL []\n", 13);
 		write(2, "<Nb_philo> <T_die> <T_eat> <T_sleep> [Nb_cycles]\n", 49);
 		return (1);
 	}
