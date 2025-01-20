@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:03:25 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/20 12:33:36 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/20 15:46:51 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct s_info
 	int				th_end;
 
 	pthread_mutex_t	*forks;
+	pthread_mutex_t	*all_time_passed;
 	pthread_mutex_t	writing;
 	pthread_mutex_t	sync_order;
 	pthread_mutex_t	total_ended_th;

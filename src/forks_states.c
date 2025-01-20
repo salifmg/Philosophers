@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 19:34:00 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/20 13:17:01 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/20 18:24:32 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int forks_availabity(t_info *g_data, int th_nbr, int part)
 			if (g_data->thread_dead == 1)
 			{
 				pthread_mutex_unlock(&g_data->check_dead);
-				leaving_taken_fork(g_data, th_nbr);
 				return (1);
 			}
 			pthread_mutex_unlock(&g_data->check_dead);
@@ -43,6 +42,7 @@ int forks_availabity(t_info *g_data, int th_nbr, int part)
 			if (g_data->thread_dead == 1)
 			{
 				pthread_mutex_unlock(&g_data->check_dead);
+				leaving_taken_fork(g_data, th_nbr);
 				return (1);
 			}
 			pthread_mutex_unlock(&g_data->check_dead);
@@ -64,8 +64,10 @@ int	leaving_forks(t_info *g_data, int th_nbr)
 		pthread_mutex_unlock(&g_data->forks[next_fork_index(g_data, th_nbr)]);
 		g_data->forks_status[next_fork_index(g_data, th_nbr)] = 0;
 	}
+	pthread_mutex_lock(&g_data->check_dead);
 	if (g_data->thread_dead == 1)
 		return (1);
+	pthread_mutex_unlock(&g_data->check_dead);
 	return (0);
 }
 
@@ -112,10 +114,14 @@ int	single_fork(t_info *g_data, int th_nbr)
 {
 	pthread_mutex_lock(&g_data->forks[th_nbr]);
 	print_logs(g_data, th_nbr, g_data->start_time, "has taken a fork");
-	pthread_mutex_lock(&g_data->check_dead);
-	while (g_data->thread_dead == 0) // probleme
+	while (1)
+	{
+		pthread_mutex_lock(&g_data->check_dead);
+		if (g_data->thread_dead == 1)
+			break ;
+		pthread_mutex_unlock(&g_data->check_dead);
 		usleep(50);
-	pthread_mutex_unlock(&g_data->check_dead);
+	}
 	pthread_mutex_unlock(&g_data->forks[th_nbr]);
 	return (1);
 }

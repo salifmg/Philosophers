@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:27:11 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/20 13:00:08 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/20 16:58:55 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,15 @@ int	sleeping(t_info *g_data, int th_nbr)
 
 	t_left_sleep = g_data->t_sleep;
 	print_logs(g_data, th_nbr, g_data->start_time, "is sleeping");
-	while (t_left_sleep && g_data->thread_dead == 0)
+	while (t_left_sleep)
 	{
+		pthread_mutex_lock(&g_data->check_dead);
+		if (g_data->thread_dead == 1)
+		{
+			pthread_mutex_unlock(&g_data->check_dead);
+			break ;
+		}
+		pthread_mutex_unlock(&g_data->check_dead);
 		if (9000 < t_left_sleep)
 		{
 			usleep(9000);
@@ -84,14 +91,16 @@ void	*philo(void *param)
 	t_info			*g_data;
 	int				th_nbr;
 
-	loop_count = 0;
 	g_data = (t_info *)param;
 	pthread_mutex_lock(&g_data->sync_order);
 	th_nbr = g_data->thread_count;
+	pthread_mutex_lock(&g_data->all_time_passed[th_nbr]);
 	pthread_mutex_unlock(&g_data->sync_order);
 	if (th_nbr % 2 && g_data->nb_philo > 1)
 		ft_usleep(g_data->t_eat / 50);
 	g_data->time_passed[th_nbr] = get_ctime();
+	pthread_mutex_unlock(&g_data->all_time_passed[th_nbr]);
+	loop_count = 0;
 	while (1)
 	{
 		if (philo_actions(g_data, th_nbr) == 1)

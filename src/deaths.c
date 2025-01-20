@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 17:45:10 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/20 13:11:54 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/20 17:29:17 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,10 @@ int	check_philos(t_info *g_data)
 			return (0);
 		}
 		pthread_mutex_unlock(&g_data->total_ended_th);
+		pthread_mutex_lock(&g_data->all_time_passed[i]);
 		if (check_death(g_data, g_data->time_passed[i], i) == 1)
 			break ;
+		pthread_mutex_unlock(&g_data->all_time_passed[i]);
 		if (++i == g_data->nb_philo)
 			i = 0;
 		usleep(50); //plus gros ou ptit
