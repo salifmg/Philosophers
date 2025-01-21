@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 16:39:27 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/20 17:14:58 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/21 18:51:25 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	delete_mutexes(t_info *g_data)
 	int	i;
 
 	i = 0;
-	pthread_mutex_destroy(&g_data->sync_order);
+    pthread_mutex_destroy(&g_data->sync_order);
 	pthread_mutex_destroy(&g_data->writing);
 	pthread_mutex_destroy(&g_data->total_ended_th);
 	pthread_mutex_destroy(&g_data->check_dead);
@@ -48,6 +48,7 @@ void	delete_mutexes(t_info *g_data)
 void	del_and_free(t_info *g_data, t_philo *philo_data, int part)
 {
 	// tant que tt les forks sont pas libres on att
+	printf("dans del et free\n");
 	if (part == 1)
 	{
 		delete_threads(g_data, philo_data);
@@ -58,7 +59,9 @@ void	del_and_free(t_info *g_data, t_philo *philo_data, int part)
 	}
 	else if (part == 2)
 	{
+		printf("test1\n");
 		delete_mutexes(g_data);
+		printf("test2\n");
 		free(g_data->forks);
 		free(g_data->forks_status);
 		free(g_data->time_passed);

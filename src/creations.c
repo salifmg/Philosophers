@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 18:20:40 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/20 18:53:34 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/21 19:34:47 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ int	single_thread(t_info *g_data, t_philo *philo_data)
 		return (perror("Failed to create a thread"), 1);
 	if (pthread_detach(philo_data[i].threads) != 0)
 		return (perror("Failed to detach thread"), 1);
+	printf("thread a ete cree\n");
 	i++;
 	return (0);
 }
@@ -76,6 +77,6 @@ void	ft_usleep(long ms)
 	long	begin;
 
 	begin = get_ctime();
-	while (get_ctime() - begin >= ms)
+	while (get_ctime() - begin > ms)
 		usleep(10);
 }

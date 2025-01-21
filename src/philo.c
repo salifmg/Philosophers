@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:27:11 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/20 16:58:55 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/21 19:42:39 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,28 +91,30 @@ void	*philo(void *param)
 	t_info			*g_data;
 	int				th_nbr;
 
+	printf("dans philo\n");
 	g_data = (t_info *)param;
 	pthread_mutex_lock(&g_data->sync_order);
 	th_nbr = g_data->thread_count;
+	pthread_mutex_unlock(&g_data->sync_order); // inverse sens avc en dessous ?
+	printf("apres sync order\n");
 	pthread_mutex_lock(&g_data->all_time_passed[th_nbr]);
-	pthread_mutex_unlock(&g_data->sync_order);
+	printf("test1\n");
 	if (th_nbr % 2 && g_data->nb_philo > 1)
 		ft_usleep(g_data->t_eat / 50);
 	g_data->time_passed[th_nbr] = get_ctime();
 	pthread_mutex_unlock(&g_data->all_time_passed[th_nbr]);
 	loop_count = 0;
+	printf("avant actions\n");
 	while (1)
 	{
 		if (philo_actions(g_data, th_nbr) == 1)
 			break ;
 		if (g_data->nb_cycles && ++loop_count == g_data->nb_cycles)
-		{
-			pthread_mutex_lock(&g_data->total_ended_th);
-			g_data->th_end += 1;
-			pthread_mutex_unlock(&g_data->total_ended_th);
 			break ;
-		}
 	}
+	pthread_mutex_lock(&g_data->total_ended_th);
+	g_data->th_end += 1;
+	pthread_mutex_unlock(&g_data->total_ended_th);
 	return (0);
 }
 
@@ -144,18 +146,24 @@ int	single_philosopher(t_info *g_data, t_philo *philo_data)
 {
 	pthread_mutex_init(&g_data->sync_order, NULL);
 	pthread_mutex_init(&g_data->writing, NULL);
+	pthread_mutex_init(&g_data->total_ended_th, NULL);
+	pthread_mutex_init(&g_data->check_dead, NULL);
 	if (init_lists(g_data) == 1)
 		return (1);
 	if (forks_creation(g_data) == 1)
 		return (1);
+	printf("cree thread\n");
 	if (single_thread(g_data, philo_data) == 1)
 	{
 		del_and_free(g_data, philo_data, 2);
 		return (1);
 	}
+	printf("avant check philo\n");
 	if (check_philos(g_data) == 1)
 	{
+		printf("avant del et free\n");
 		del_and_free(g_data, philo_data, 2);
+		printf("avant return\n");
 		return (1);
 	}
 	del_and_free(g_data, philo_data, 2);

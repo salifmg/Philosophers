@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 17:05:09 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/20 10:43:18 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/21 14:36:09 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ int	main(int ac, char **av)
 		return (perror("Failed to allocate memory for philosophers"), 1);
 	if (g_data.nb_philo == 1)
 	{
+		printf("main\n");
 		if (single_philosopher(&g_data, philo_data) != 0)
 			return (free(philo_data), 1);
 	}
