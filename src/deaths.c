@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 17:45:10 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/21 19:19:01 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/22 20:24:14 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,23 @@
 int	check_death(t_info *g_data, long last_meal_time, int th_nbr)
 {
 	long	now;
-	long	time_passed;
+	unsigned long	time_passed;
+	unsigned long	t_to_die_long;
 
 	now = get_ctime();
 	time_passed = now - g_data->start_time;
 	time_passed -= last_meal_time;
+	t_to_die_long = (unsigned long)g_data->t_die;
 	// printf("dans check death\n");
-	if (time_passed >= g_data->t_die)
+	pthread_mutex_lock(&g_data->total_ended_th);
+	if ((time_passed >= t_to_die_long) && (g_data->th_end != g_data->nb_philo))
 	{
 		printf("dans check death MORT\n");
 		print_logs(g_data, th_nbr, g_data->start_time, "died");
+		pthread_mutex_unlock(&g_data->total_ended_th);
 		return (1);
 	}
+	pthread_mutex_unlock(&g_data->total_ended_th);
 	pthread_mutex_lock(&g_data->check_dead);
 	if (g_data->thread_dead == 1)
 	{
@@ -47,7 +52,27 @@ int	check_philos(t_info *g_data)
 	printf("dans check philo\n");
 	while (1)
 	{
+		pthread_mutex_lock(&g_data->check_increment);
+		if (g_data->t_passed_over == g_data->nb_philo)
+		{
+			pthread_mutex_unlock(&g_data->check_increment);
+			break ;
+		}
+		pthread_mutex_unlock(&g_data->check_increment);
+		usleep(500); //plus gros ou ptit
+	}
+	while (1)
+	{
 		// printf("check loop\n");
+		//printf("check death appel\n");
+		pthread_mutex_lock(&g_data->all_time_passed[i]);
+		if (check_death(g_data, g_data->time_passed[i], i) == 1)
+		{
+			pthread_mutex_unlock(&g_data->all_time_passed[i]);
+			printf("check philo break\n");
+			break ;
+		}
+		pthread_mutex_unlock(&g_data->all_time_passed[i]);
 		pthread_mutex_lock(&g_data->total_ended_th);
 		if (g_data->th_end == g_data->nb_philo)
 		{
@@ -55,30 +80,24 @@ int	check_philos(t_info *g_data)
 			return (0);
 		}
 		pthread_mutex_unlock(&g_data->total_ended_th);
-		//printf("check death appel\n");
-		pthread_mutex_lock(&g_data->all_time_passed[i]);
-		if (check_death(g_data, g_data->time_passed[i], i) == 1)
-		{
-			pthread_mutex_unlock(&g_data->all_time_passed[i]);
-			break ;
-		}
-		pthread_mutex_unlock(&g_data->all_time_passed[i]);
 		if (++i == g_data->nb_philo)
 			i = 0;
 		usleep(50); //plus gros ou ptit
 		// printf("check philo looped\n");
 	}
-	printf("check philo break\n");
 	while (1)
 	{
 		pthread_mutex_lock(&g_data->total_ended_th);
-		if (g_data->th_end == g_data->nb_philo)
+		if (g_data->th_end != g_data->nb_philo)
+		{
+			pthread_mutex_unlock(&g_data->total_ended_th);
+			usleep(100);
+		}
+		else
 		{
 			pthread_mutex_unlock(&g_data->total_ended_th);
 			break ;
 		}
-		pthread_mutex_unlock(&g_data->total_ended_th);
-		usleep(200); //plus gros ou ptit
 	}
 	printf("check philo FIN\n");
 	return (1);

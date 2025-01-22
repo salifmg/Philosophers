@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:03:25 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/20 15:46:51 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/22 16:54:06 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct s_info
 	int				nb_cycles;
 	int				thread_count;
 	int				thread_dead;
+	int				t_passed_over;
 	int				th_end;
 
 	pthread_mutex_t	*forks;
@@ -44,6 +45,7 @@ typedef struct s_info
 	pthread_mutex_t	sync_order;
 	pthread_mutex_t	total_ended_th;
 	pthread_mutex_t	check_dead;
+	pthread_mutex_t	check_increment;
 }						t_info;
 
 typedef struct s_philo
