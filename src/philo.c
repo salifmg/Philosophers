@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:27:11 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/22 19:19:31 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/23 21:04:36 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,15 +96,13 @@ void	*philo(void *param)
 	printf("dans philo\n");
 	g_data = (t_info *)param;
 	pthread_mutex_lock(&g_data->sync_order);
+	g_data->th_nbr_passed += 1;
 	th_nbr = g_data->thread_count;
-	pthread_mutex_unlock(&g_data->sync_order); // inverse sens avc en dessous ?
+	pthread_mutex_unlock(&g_data->sync_order);
 	printf("apres sync order AVANT CRASH\n");
 	printf("test1 APRES CRASH\n");
-	if (th_nbr % 2 && g_data->nb_philo > 1)
-		ft_usleep(g_data->t_eat / 50);
-	pthread_mutex_lock(&g_data->all_time_passed[th_nbr]);
-	g_data->time_passed[th_nbr] = get_ctime();
-	pthread_mutex_unlock(&g_data->all_time_passed[th_nbr]);
+	if ((th_nbr % 2  == 1) && (g_data->nb_philo > 1))
+		ft_usleep(g_data->t_eat / 50); // pb ici?
 	pthread_mutex_lock(&g_data->check_increment);
 	g_data->t_passed_over += 1;
 	pthread_mutex_unlock(&g_data->check_increment);
@@ -142,6 +140,7 @@ int	philosophers_creation(t_info *g_data, t_philo *philo_data)
 	if (check_philos(g_data) == 1)
 	{
 		del_and_free(g_data, philo_data, 1);
+		printf("avant return\n");
 		return (1);
 	}
 	del_and_free(g_data, philo_data, 1);
@@ -171,8 +170,6 @@ int	single_philosopher(t_info *g_data, t_philo *philo_data)
 		printf("avant del et free\n");
 		del_and_free(g_data, philo_data, 2);
 		printf("avant return\n");
-		return (1);
 	}
-	del_and_free(g_data, philo_data, 2);
-	return (0);
+	return (1);
 }

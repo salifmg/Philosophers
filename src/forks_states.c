@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 19:34:00 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/22 20:17:02 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/23 21:06:16 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,14 @@ int forks_availabity(t_info *g_data, int th_nbr, int part)
 		while (1)
 		{
 			pthread_mutex_lock(&g_data->forks[next_fork_index(g_data, th_nbr)]);
+			g_data->forks_to_leave[next_fork_index(g_data, th_nbr)] = 1; //jsp
 			if (g_data->forks_status[next_fork_index(g_data, th_nbr)] == 1)
 			{
 				pthread_mutex_unlock(&g_data->forks[next_fork_index(g_data, th_nbr)]);
 				pthread_mutex_lock(&g_data->check_dead);
 				if (g_data->thread_dead == 1)
 				{
+					g_data->forks_to_leave[next_fork_index(g_data, th_nbr)] = 0;
 					pthread_mutex_unlock(&g_data->check_dead);
 					leaving_taken_fork(g_data, th_nbr);
 					return (1);
@@ -64,6 +66,7 @@ int forks_availabity(t_info *g_data, int th_nbr, int part)
 			}
 			else
 			{
+				g_data->forks_to_leave[next_fork_index(g_data, th_nbr)] = 0;
 				pthread_mutex_unlock(&g_data->forks[next_fork_index(g_data, th_nbr)]);
 				break ;
 			}
@@ -79,14 +82,20 @@ int	leaving_forks(t_info *g_data, int th_nbr)
 		g_data->forks_status[th_nbr] = 0;
 		pthread_mutex_unlock(&g_data->forks[th_nbr]);
 	}
-	if (g_data->forks_status[next_fork_index(g_data, th_nbr)] == 1)
+	if ((g_data->forks_status[next_fork_index(g_data, th_nbr)] == 1) &&
+		(g_data->forks_to_leave[next_fork_index(g_data, th_nbr)] == 0))
+	//var qui egal a 1, sinn 0 a la place
 	{
 		g_data->forks_status[next_fork_index(g_data, th_nbr)] = 0;
 		pthread_mutex_unlock(&g_data->forks[next_fork_index(g_data, th_nbr)]);
 	}
 	pthread_mutex_lock(&g_data->check_dead);
 	if (g_data->thread_dead == 1)
+	{
+		pthread_mutex_unlock(&g_data->check_dead);
+		printf("mort dans leaving");
 		return (1);
+	}
 	pthread_mutex_unlock(&g_data->check_dead);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 17:45:10 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/22 20:24:14 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/23 18:54:43 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,23 @@
 int	check_death(t_info *g_data, long last_meal_time, int th_nbr)
 {
 	long	now;
-	unsigned long	time_passed;
-	unsigned long	t_to_die_long;
+	long	time_passed;
 
 	now = get_ctime();
 	time_passed = now - g_data->start_time;
 	time_passed -= last_meal_time;
-	t_to_die_long = (unsigned long)g_data->t_die;
 	// printf("dans check death\n");
+
+	// printf("%llu\n", time_passed);
+	// printf("%ld\n", last_meal_time);
+	// printf("%llu\n", (unsigned long long)last_meal_time);
+	// printf("%ld\n", now);
+	// printf("%ld\n", g_data->start_time);
+
 	pthread_mutex_lock(&g_data->total_ended_th);
-	if ((time_passed >= t_to_die_long) && (g_data->th_end != g_data->nb_philo))
+	if ((time_passed >= g_data->t_die) && (g_data->th_end != g_data->nb_philo))
 	{
-		printf("dans check death MORT\n");
+		printf("dans check death MORT %ld\n", time_passed);
 		print_logs(g_data, th_nbr, g_data->start_time, "died");
 		pthread_mutex_unlock(&g_data->total_ended_th);
 		return (1);
@@ -59,7 +64,7 @@ int	check_philos(t_info *g_data)
 			break ;
 		}
 		pthread_mutex_unlock(&g_data->check_increment);
-		usleep(500); //plus gros ou ptit
+		usleep(500); //plus gros ou ptit probleme jcrois
 	}
 	while (1)
 	{

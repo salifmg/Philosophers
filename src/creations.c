@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 18:20:40 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/22 19:02:15 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/23 16:19:26 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,19 @@ int	threads_creation(t_info *g_data, t_philo *philo_data)
 	g_data->start_time = get_ctime();
 	while (i < g_data->nb_philo)
 	{
-		pthread_mutex_lock(&g_data->sync_order);
+		while (1)
+		{
+			pthread_mutex_lock(&g_data->sync_order);
+			if (g_data->th_nbr_passed != i)
+				pthread_mutex_unlock(&g_data->sync_order);
+			else
+			{
+				pthread_mutex_unlock(&g_data->sync_order);
+				break ;
+			}
+			usleep(100);
+		}
 		g_data->thread_count = i;
-		pthread_mutex_unlock(&g_data->sync_order);
 		// printf("thread_count: %d\n", g_data->thread_count); //test
 		if (pthread_create(&philo_data[i].threads, NULL, &philo, g_data) != 0)
 			return (perror("Failed to create a thread"), 1);
@@ -57,15 +67,23 @@ int	single_thread(t_info *g_data, t_philo *philo_data)
 	g_data->start_time = get_ctime();
 	while (i < g_data->nb_philo)
 	{
-		pthread_mutex_lock(&g_data->sync_order);
+		while (1)
+		{
+			pthread_mutex_lock(&g_data->sync_order);
+			if (g_data->th_nbr_passed != i)
+				pthread_mutex_unlock(&g_data->sync_order);
+			else
+			{
+				pthread_mutex_unlock(&g_data->sync_order);
+				break ;
+			}
+			usleep(100);
+		}
 		g_data->thread_count = i;
-		pthread_mutex_unlock(&g_data->sync_order);
 		if (pthread_create(&philo_data[i].threads, NULL, &philo, g_data) != 0)
 			return (perror("Failed to create a thread"), 1);
-		if (pthread_detach(philo_data[i].threads) != 0)
+		if (pthread_detach(philo_data[i++].threads) != 0)
 			return (perror("Failed to detach thread"), 1);
-		printf("thread a ete cree\n");
-		i++;
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:03:25 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/22 16:54:06 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/23 20:25:13 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct s_info
 	long			start_time;
 
 	int				*forks_status;
+	int				*forks_to_leave;
 	int				nb_philo;
 	int				t_die;
 	int				t_eat;
@@ -38,6 +39,7 @@ typedef struct s_info
 	int				thread_dead;
 	int				t_passed_over;
 	int				th_end;
+	int				th_nbr_passed;
 
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	*all_time_passed;

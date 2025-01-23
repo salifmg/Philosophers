@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 16:39:27 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/22 16:55:22 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/23 20:33:22 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	del_and_free(t_info *g_data, t_philo *philo_data, int part)
 		free(g_data->forks);
 		free(g_data->forks_status);
 		free(g_data->time_passed);
+		free(g_data->forks_to_leave);
 	}
 	else if (part == 2)
 	{
@@ -66,5 +67,6 @@ void	del_and_free(t_info *g_data, t_philo *philo_data, int part)
 		free(g_data->forks);
 		free(g_data->forks_status);
 		free(g_data->time_passed);
+		free(g_data->forks_to_leave);
 	}
 }
