@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:13:58 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/13 16:28:48 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/24 18:25:11 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,6 @@ int	philo_actions(t_info *g_data, int th_nbr)
 		return (1);
 	if (sleeping(g_data, th_nbr) == 1)
 		return (1);
-	print_logs(g_data, th_nbr, g_data->start_time, "is thinking"); //delais apres ptetre
+	print_logs(g_data, th_nbr, g_data->start_time, "is thinking");
 	return (0);
 }

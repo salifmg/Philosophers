@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:27:11 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/23 21:04:36 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/24 20:16:10 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,18 +27,18 @@ int	eating(t_info *g_data, int th_nbr)
 			break ;
 		}
 		pthread_mutex_unlock(&g_data->check_dead);
-		if (9000 < t_left_eat)
+		if (10 <= t_left_eat)
 		{
-			usleep(9000);
-			t_left_eat -= 9;
+			usleep(1000);
+			t_left_eat -= 1;
 		}
-		else
+		else if (t_left_eat > 0)
 		{
-			usleep(t_left_eat * 1000);
+			usleep(t_left_eat * 100);
 			t_left_eat -= t_left_eat;
 		}
 	}
-	pthread_mutex_lock(&g_data->check_dead); // Protéger l'accès à thread_dead
+	pthread_mutex_lock(&g_data->check_dead);
 	if (g_data->thread_dead == 1)
 	{
 		pthread_mutex_unlock(&g_data->check_dead);
@@ -66,18 +66,18 @@ int	sleeping(t_info *g_data, int th_nbr)
 			break ;
 		}
 		pthread_mutex_unlock(&g_data->check_dead);
-		if (9000 < t_left_sleep)
+		if (10 <= t_left_sleep)
 		{
-			usleep(9000);
-			t_left_sleep -= 9;
+			usleep(1000);
+			t_left_sleep -= 1;
 		}
 		else if (t_left_sleep > 0)
 		{
-			usleep(t_left_sleep * 1000);
+			usleep(t_left_sleep * 100);
 			t_left_sleep -= t_left_sleep;
 		}
 	}
-	pthread_mutex_lock(&g_data->check_dead); // Protéger l'accès à thread_dead
+	pthread_mutex_lock(&g_data->check_dead);
 	if (g_data->thread_dead == 1)
 	{
 		pthread_mutex_unlock(&g_data->check_dead);
@@ -89,30 +89,24 @@ int	sleeping(t_info *g_data, int th_nbr)
 
 void	*philo(void *param)
 {
-	long			loop_count;
 	t_info			*g_data;
+	long			loop_count;
 	int				th_nbr;
 
-	printf("dans philo\n");
 	g_data = (t_info *)param;
 	pthread_mutex_lock(&g_data->sync_order);
 	g_data->th_nbr_passed += 1;
 	th_nbr = g_data->thread_count;
 	pthread_mutex_unlock(&g_data->sync_order);
-	printf("apres sync order AVANT CRASH\n");
-	printf("test1 APRES CRASH\n");
 	if ((th_nbr % 2  == 1) && (g_data->nb_philo > 1))
-		ft_usleep(g_data->t_eat / 50); // pb ici?
+		ft_usleep(g_data->t_eat / 50);
 	pthread_mutex_lock(&g_data->check_increment);
 	g_data->t_passed_over += 1;
 	pthread_mutex_unlock(&g_data->check_increment);
 	loop_count = 0;
-	printf("avant actions\n");
 	while (1)
 	{
-		if (philo_actions(g_data, th_nbr) == 1)
-			break ;
-		if (g_data->nb_cycles && ++loop_count == g_data->nb_cycles)
+		if ((philo_actions(g_data, th_nbr) == 1) || (g_data->nb_cycles && ++loop_count == g_data->nb_cycles))
 			break ;
 	}
 	pthread_mutex_lock(&g_data->total_ended_th);
@@ -134,42 +128,16 @@ int	philosophers_creation(t_info *g_data, t_philo *philo_data)
 		return (1);
 	if (threads_creation(g_data, philo_data) == 1)
 	{
-		del_and_free(g_data, philo_data, 1);
-		return (1);
+		if (g_data->nb_philo == 1)
+			return (del_and_free(g_data, philo_data, 2), 1);
+		return (del_and_free(g_data, philo_data, 1), 1);
 	}
 	if (check_philos(g_data) == 1)
 	{
-		del_and_free(g_data, philo_data, 1);
-		printf("avant return\n");
-		return (1);
+		if (g_data->nb_philo == 1)
+			return (del_and_free(g_data, philo_data, 2), 1);
+		return (del_and_free(g_data, philo_data, 1), 1);
 	}
 	del_and_free(g_data, philo_data, 1);
 	return (0);
-}
-
-int	single_philosopher(t_info *g_data, t_philo *philo_data)
-{
-	pthread_mutex_init(&g_data->sync_order, NULL);
-	pthread_mutex_init(&g_data->writing, NULL);
-	pthread_mutex_init(&g_data->total_ended_th, NULL);
-	pthread_mutex_init(&g_data->check_dead, NULL);
-	pthread_mutex_init(&g_data->check_increment, NULL);
-	if (init_lists(g_data) == 1)
-		return (1);
-	if (forks_creation(g_data) == 1)
-		return (1);
-	printf("cree thread\n");
-	if (single_thread(g_data, philo_data) == 1)
-	{
-		del_and_free(g_data, philo_data, 2);
-		return (1);
-	}
-	printf("avant check philo\n");
-	if (check_philos(g_data) == 1)
-	{
-		printf("avant del et free\n");
-		del_and_free(g_data, philo_data, 2);
-		printf("avant return\n");
-	}
-	return (1);
 }

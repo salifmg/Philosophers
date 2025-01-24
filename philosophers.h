@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:03:25 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/23 20:25:13 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/24 19:27:54 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ typedef struct s_info
 	long			start_time;
 
 	int				*forks_status;
-	int				*forks_to_leave;
 	int				nb_philo;
 	int				t_die;
 	int				t_eat;
@@ -74,11 +73,8 @@ int		eating(t_info *g_data, int th_nbr);
 
 int		threads_creation(t_info *g_data, t_philo *philo_data);
 int		delete_threads(t_info *g_data, t_philo *philo_data);
-int		single_thread(t_info *g_data, t_philo *philo_data);
-int		single_philosopher(t_info *g_data, t_philo *philo_data);
 int		philosophers_creation(t_info *g_data, t_philo *philo_data);
 int		philo_actions(t_info *g_data, int th_nbr);
-
 
 int		forks_creation(t_info *g_data);
 int		single_fork(t_info *g_data, int th_nbr);

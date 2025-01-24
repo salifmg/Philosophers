@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 16:39:27 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/23 20:33:22 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/24 18:02:55 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,6 @@ void	delete_mutexes(t_info *g_data)
 
 void	del_and_free(t_info *g_data, t_philo *philo_data, int part)
 {
-	// tant que tt les forks sont pas libres on att
-	printf("dans del et free\n");
 	if (part == 1)
 	{
 		delete_threads(g_data, philo_data);
@@ -57,16 +55,12 @@ void	del_and_free(t_info *g_data, t_philo *philo_data, int part)
 		free(g_data->forks);
 		free(g_data->forks_status);
 		free(g_data->time_passed);
-		free(g_data->forks_to_leave);
 	}
 	else if (part == 2)
 	{
-		printf("test1\n");
 		delete_mutexes(g_data);
-		printf("test2\n");
 		free(g_data->forks);
 		free(g_data->forks_status);
 		free(g_data->time_passed);
-		free(g_data->forks_to_leave);
 	}
 }
