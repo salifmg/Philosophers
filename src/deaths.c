@@ -6,11 +6,29 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 17:45:10 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/24 20:20:25 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/25 17:33:31 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philosophers.h"
+
+void	all_philo_over(t_info *g_data)
+{
+	while (1)
+	{
+		pthread_mutex_lock(&g_data->total_ended_th);
+		if (g_data->th_end != g_data->nb_philo)
+		{
+			pthread_mutex_unlock(&g_data->total_ended_th);
+			usleep(100);
+		}
+		else
+		{
+			pthread_mutex_unlock(&g_data->total_ended_th);
+			break ;
+		}
+	}
+}
 
 int	check_death(t_info *g_data, long last_meal_time, int th_nbr)
 {
@@ -45,17 +63,6 @@ int	check_philos(t_info *g_data)
 	i = 0;
 	while (1)
 	{
-		pthread_mutex_lock(&g_data->check_increment);
-		if (g_data->t_passed_over == g_data->nb_philo)
-		{
-			pthread_mutex_unlock(&g_data->check_increment);
-			break ;
-		}
-		pthread_mutex_unlock(&g_data->check_increment);
-		usleep(100); //plus gros ou ptit probleme jcrois
-	}
-	while (1)
-	{
 		pthread_mutex_lock(&g_data->all_time_passed[i]);
 		if (check_death(g_data, g_data->time_passed[i], i) == 1)
 		{
@@ -72,21 +79,7 @@ int	check_philos(t_info *g_data)
 		pthread_mutex_unlock(&g_data->total_ended_th);
 		if (++i == g_data->nb_philo)
 			i = 0;
-		usleep(50); //plus gros ou ptit
+		usleep(50);
 	}
-	while (1)
-	{
-		pthread_mutex_lock(&g_data->total_ended_th);
-		if (g_data->th_end != g_data->nb_philo)
-		{
-			pthread_mutex_unlock(&g_data->total_ended_th);
-			usleep(100);
-		}
-		else
-		{
-			pthread_mutex_unlock(&g_data->total_ended_th);
-			break ;
-		}
-	}
-	return (1);
+	return (all_philo_over(g_data), 1);
 }

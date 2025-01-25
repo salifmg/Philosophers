@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:03:25 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/24 19:27:54 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/25 17:33:08 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ typedef struct s_info
 	int				nb_cycles;
 	int				thread_count;
 	int				thread_dead;
-	int				t_passed_over;
 	int				th_end;
 	int				th_nbr_passed;
 
@@ -46,7 +45,6 @@ typedef struct s_info
 	pthread_mutex_t	sync_order;
 	pthread_mutex_t	total_ended_th;
 	pthread_mutex_t	check_dead;
-	pthread_mutex_t	check_increment;
 }						t_info;
 
 typedef struct s_philo
@@ -90,6 +88,8 @@ void	delete_mutexes(t_info *g_data);
 void	leaving_taken_fork(t_info *g_data, int th_nbr);
 void	del_and_free(t_info *g_data, t_philo *philo_data, int part);
 void	print_logs(t_info *g_data, int th_nbr, long start_time, char *order);
+void	all_philo_over(t_info *g_data);
+void	time_after_eating(t_info *g_data, int th_nbr);
 void	*philo(void *param);
 void	ft_usleep(long ms);
 

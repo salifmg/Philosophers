@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 19:34:00 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/24 18:24:59 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/25 17:35:50 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,28 @@ void	leaving_taken_fork(t_info *g_data, int th_nbr)
 		return ;
 	g_data->forks_status[th_nbr] = 0;
 	pthread_mutex_unlock(&g_data->forks[th_nbr]);
+}
+
+int	leaving_forks(t_info *g_data, int th_nbr)
+{
+	if (g_data->forks_status[th_nbr] == 1)
+	{
+		g_data->forks_status[th_nbr] = 0;
+		pthread_mutex_unlock(&g_data->forks[th_nbr]);
+	}
+	if (g_data->forks_status[next_fork_index(g_data, th_nbr)] == 1)
+	{
+		g_data->forks_status[next_fork_index(g_data, th_nbr)] = 0;
+		pthread_mutex_unlock(&g_data->forks[next_fork_index(g_data, th_nbr)]);
+	}
+	pthread_mutex_lock(&g_data->check_dead);
+	if (g_data->thread_dead == 1)
+	{
+		pthread_mutex_unlock(&g_data->check_dead);
+		return (1);
+	}
+	pthread_mutex_unlock(&g_data->check_dead);
+	return (0);
 }
 
 int forks_availabity(t_info *g_data, int th_nbr, int part)
@@ -37,7 +59,7 @@ int forks_availabity(t_info *g_data, int th_nbr, int part)
 					return (1);
 				}
 				pthread_mutex_unlock(&g_data->check_dead);
-				usleep(50); //plus gros ou ptit
+				usleep(200); //plus gros ou ptit
 			}
 			else
 			{
@@ -62,7 +84,7 @@ int forks_availabity(t_info *g_data, int th_nbr, int part)
 					return (1);
 				}
 				pthread_mutex_unlock(&g_data->check_dead);
-				usleep(50); //plus gros ou ptit
+				usleep(200); //plus gros ou ptit
 			}
 			else
 			{
@@ -71,28 +93,6 @@ int forks_availabity(t_info *g_data, int th_nbr, int part)
 			}
 		}
 	}
-	return (0);
-}
-
-int	leaving_forks(t_info *g_data, int th_nbr)
-{
-	if (g_data->forks_status[th_nbr] == 1)
-	{
-		g_data->forks_status[th_nbr] = 0;
-		pthread_mutex_unlock(&g_data->forks[th_nbr]);
-	}
-	if (g_data->forks_status[next_fork_index(g_data, th_nbr)] == 1)
-	{
-		g_data->forks_status[next_fork_index(g_data, th_nbr)] = 0;
-		pthread_mutex_unlock(&g_data->forks[next_fork_index(g_data, th_nbr)]);
-	}
-	pthread_mutex_lock(&g_data->check_dead);
-	if (g_data->thread_dead == 1)
-	{
-		pthread_mutex_unlock(&g_data->check_dead);
-		return (1);
-	}
-	pthread_mutex_unlock(&g_data->check_dead);
 	return (0);
 }
 
