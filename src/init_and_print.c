@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 16:28:43 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/25 16:03:55 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/26 19:49:40 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ int	init_lists(t_info *g_data)
 	g_data->thread_dead = 0;
 	g_data->th_end = 0;
 	g_data->th_nbr_passed = 0;
-	g_data->all_time_passed = malloc(sizeof(pthread_mutex_t) * g_data->nb_philo);
+	g_data->all_time_passed = malloc(sizeof(pthread_mutex_t)
+			* g_data->nb_philo);
 	g_data->time_passed = malloc(sizeof(long) * g_data->nb_philo);
 	if (!g_data->time_passed || !g_data->all_time_passed)
 		return (1);
@@ -61,7 +62,7 @@ void	print_logs(t_info *g_data, int th_nbr, long start_time, char *order)
 	else if (g_data->thread_dead == 0)
 	{
 		pthread_mutex_lock(&g_data->writing);
-		printf("%ldms %d %s\n", elapsed_time ,th_nbr + 1, order);
+		printf("%ldms %d %s\n", elapsed_time, th_nbr + 1, order);
 		pthread_mutex_unlock(&g_data->writing);
 	}
 	pthread_mutex_unlock(&g_data->check_dead);

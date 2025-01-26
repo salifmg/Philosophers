@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 16:39:27 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/25 16:03:55 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/26 19:46:41 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	delete_mutexes(t_info *g_data)
 	int	i;
 
 	i = 0;
-    pthread_mutex_destroy(&g_data->sync_order);
+	pthread_mutex_destroy(&g_data->sync_order);
 	pthread_mutex_destroy(&g_data->writing);
 	pthread_mutex_destroy(&g_data->total_ended_th);
 	pthread_mutex_destroy(&g_data->check_dead);

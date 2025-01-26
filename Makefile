@@ -6,7 +6,7 @@
 #    By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/11 11:18:50 by smagassa          #+#    #+#              #
-#    Updated: 2025/01/14 00:49:45 by smagassa         ###   ########.fr        #
+#    Updated: 2025/01/26 18:40:49 by smagassa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,15 +18,15 @@ SRCS =	src/main.c        \
 		src/forks_states.c \
 		src/init_and_print.c \
 		src/libft.c        \
-		src/philo.c
+		src/philo_routine.c
 
-NAME = philosophers
+NAME = philo
 CC = cc
 RM = rm -f
 AR = ar -rc
 DEPS = includes
 
-CFLAGS = -Wall -Wextra -Werror -pthread -g3 -fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror
 OBJS = $(SRCS:%.c=%.o)
 
 all: $(NAME)

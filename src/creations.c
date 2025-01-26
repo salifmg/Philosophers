@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 18:20:40 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/24 19:17:03 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/26 19:43:22 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	threads_creation(t_info *g_data, t_philo *philo_data)
 	return (0);
 }
 
-int	next_fork_index(t_info *g_data, int th_nbr)
+int	next_fork_i(t_info *g_data, int th_nbr)
 {
 	return ((th_nbr + 1) % g_data->nb_philo);
 }

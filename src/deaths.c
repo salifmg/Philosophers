@@ -6,13 +6,13 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 17:45:10 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/25 17:33:31 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/26 18:06:08 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philosophers.h"
 
-void	all_philo_over(t_info *g_data)
+void	all_philos_ended(t_info *g_data)
 {
 	while (1)
 	{
@@ -81,5 +81,5 @@ int	check_philos(t_info *g_data)
 			i = 0;
 		usleep(50);
 	}
-	return (all_philo_over(g_data), 1);
+	return (all_philos_ended(g_data), 1);
 }

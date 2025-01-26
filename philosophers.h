@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:03:25 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/25 17:33:08 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/26 19:43:22 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,12 +52,6 @@ typedef struct s_philo
 	pthread_t		threads;
 }						t_philo;
 
-typedef struct s_thread_param
-{
-	int				th_nbr;
-	t_info			*g_data;
-}				t_thread_param;
-
 long	get_ctime(void);
 
 int		ft_strcmp(char *s1, char *s2);
@@ -79,16 +73,21 @@ int		single_fork(t_info *g_data, int th_nbr);
 int		taking_forks(t_info *g_data, int th_nbr);
 int		leaving_forks(t_info *g_data, int th_nbr);
 int		forks_availabity(t_info *g_data, int th_nbr, int part);
-int		next_fork_index(t_info *g_data, int th_nbr);
+int		next_fork_i(t_info *g_data, int th_nbr);
 
+int		check_second_fork(t_info *g_data, int th_nbr);
+int		check_and_unlock(t_info *g_data, int th_nbr, int forks_taken);
 int		check_death(t_info *g_data, long last_meal_time, int th_nbr);
 int		check_philos(t_info *g_data);
 
-void	delete_mutexes(t_info *g_data);
+void	choose_fork(t_info *g_data, int th_nbr, int fork);
 void	leaving_taken_fork(t_info *g_data, int th_nbr);
+
+void	delete_mutexes(t_info *g_data);
 void	del_and_free(t_info *g_data, t_philo *philo_data, int part);
+
 void	print_logs(t_info *g_data, int th_nbr, long start_time, char *order);
-void	all_philo_over(t_info *g_data);
+void	all_philos_ended(t_info *g_data);
 void	time_after_eating(t_info *g_data, int th_nbr);
 void	*philo(void *param);
 void	ft_usleep(long ms);
