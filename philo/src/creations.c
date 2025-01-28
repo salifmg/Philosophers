@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 18:20:40 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/27 20:35:08 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/28 19:57:16 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	threads_creation(t_info *g_data, t_philo *philo_data)
 				pthread_mutex_unlock(&g_data->sync_order);
 				break ;
 			}
-			usleep(50);
+			usleep(10);
 		}
 		g_data->thread_count = i;
 		if (pthread_create(&philo_data[i++].threads, NULL, &philo, g_data) != 0)

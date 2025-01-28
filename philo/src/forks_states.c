@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 19:34:00 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/27 20:25:36 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/28 20:02:01 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	forks_availabity(t_info *g_data, int th_nbr, int part)
 				pthread_mutex_unlock(&g_data->forks[th_nbr]);
 				if (is_philo_dead(g_data, th_nbr, 0) == 1)
 					return (1);
-				usleep(200);
+				usleep(50);
 			}
 			else
 			{
