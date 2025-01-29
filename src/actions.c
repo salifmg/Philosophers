@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:13:58 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/26 19:43:22 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/28 20:01:59 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ int	check_second_fork(t_info *g_data, int th_nbr)
 		if (g_data->forks_status[next_fork_i(g_data, th_nbr)] == 1)
 		{
 			pthread_mutex_unlock(&g_data->forks[next_fork_i(g_data, th_nbr)]);
-			if (check_and_unlock(g_data, th_nbr, 1) == 1)
+			if (is_philo_dead(g_data, th_nbr, 1) == 1)
 				return (1);
-			usleep(200);
+			usleep(50);
 		}
 		else
 		{
@@ -33,7 +33,7 @@ int	check_second_fork(t_info *g_data, int th_nbr)
 	return (0);
 }
 
-int	check_and_unlock(t_info *g_data, int th_nbr, int forks_taken)
+int	is_philo_dead(t_info *g_data, int th_nbr, int forks_taken)
 {
 	pthread_mutex_lock(&g_data->check_dead);
 	if (g_data->thread_dead == 1)

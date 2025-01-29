@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 16:39:27 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/26 19:46:41 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/29 14:57:16 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	delete_mutexes(t_info *g_data)
 	while (i < g_data->nb_philo)
 	{
 		pthread_mutex_destroy(&g_data->forks[i]);
-		pthread_mutex_destroy(&g_data->all_time_passed[i]);
+		pthread_mutex_destroy(&g_data->total_time_passed[i]);
 		i++;
 	}
 }
@@ -48,18 +48,12 @@ void	delete_mutexes(t_info *g_data)
 void	del_and_free(t_info *g_data, t_philo *philo_data, int part)
 {
 	if (part == 1)
-	{
 		delete_threads(g_data, philo_data);
-		delete_mutexes(g_data);
-		free(g_data->forks);
-		free(g_data->forks_status);
-		free(g_data->time_passed);
-	}
-	else if (part == 2)
-	{
-		delete_mutexes(g_data);
-		free(g_data->forks);
-		free(g_data->forks_status);
-		free(g_data->time_passed);
-	}
+	else if (one_thread(g_data, philo_data) == 1)
+		return ;
+	delete_mutexes(g_data);
+	free(g_data->forks);
+	free(g_data->forks_status);
+	free(g_data->time_passed);
+	free(g_data->total_time_passed);
 }

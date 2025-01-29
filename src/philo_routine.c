@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:27:11 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/26 19:48:58 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/29 14:57:16 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,19 @@
 
 void	time_after_eating(t_info *g_data, int th_nbr)
 {
-	pthread_mutex_lock(&g_data->all_time_passed[th_nbr]);
+	pthread_mutex_lock(&g_data->total_time_passed[th_nbr]);
 	g_data->time_passed[th_nbr] = get_ctime();
-	pthread_mutex_unlock(&g_data->all_time_passed[th_nbr]);
+	pthread_mutex_unlock(&g_data->total_time_passed[th_nbr]);
 }
 
 int	eating(t_info *g_data, int th_nbr)
 {
 	long	t_left_eat;
 
-	t_left_eat = g_data->t_eat;
+	t_left_eat = g_data->t_eat * 1000;
 	print_logs(g_data, th_nbr, g_data->start_time, "is eating");
-	while (t_left_eat)
-	{
-		if (check_and_unlock(g_data, th_nbr, 2) == 1)
-			return (1);
-		usleep(1000);
-		t_left_eat--;
-	}
-	if (check_and_unlock(g_data, th_nbr, 2) == 1)
+	usleep(t_left_eat);
+	if (is_philo_dead(g_data, th_nbr, 2) == 1)
 		return (1);
 	time_after_eating(g_data, th_nbr);
 	return (0);
@@ -42,16 +36,10 @@ int	sleeping(t_info *g_data, int th_nbr)
 {
 	long	t_left_sleep;
 
-	t_left_sleep = g_data->t_sleep;
+	t_left_sleep = g_data->t_sleep * 1000;
 	print_logs(g_data, th_nbr, g_data->start_time, "is sleeping");
-	while (t_left_sleep)
-	{
-		if (check_and_unlock(g_data, th_nbr, 0) == 1)
-			return (1);
-		usleep(1000);
-		t_left_sleep--;
-	}
-	if (check_and_unlock(g_data, th_nbr, 0) == 1)
+	usleep(t_left_sleep);
+	if (is_philo_dead(g_data, th_nbr, 0) == 1)
 		return (1);
 	return (0);
 }

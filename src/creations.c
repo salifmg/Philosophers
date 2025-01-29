@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 18:20:40 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/26 19:43:22 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/28 19:57:16 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,14 @@ int	forks_creation(t_info *g_data)
 	return (0);
 }
 
+int	one_thread(t_info *g_data, t_philo *philo_data)
+{
+	if (g_data->nb_philo == 1)
+		if (pthread_detach(philo_data[0].threads) != 0)
+			return (perror("Failed to detach thread"), 1);
+	return (0);
+}
+
 int	threads_creation(t_info *g_data, t_philo *philo_data)
 {
 	int		i;
@@ -48,14 +56,12 @@ int	threads_creation(t_info *g_data, t_philo *philo_data)
 				pthread_mutex_unlock(&g_data->sync_order);
 				break ;
 			}
+			usleep(10);
 		}
 		g_data->thread_count = i;
 		if (pthread_create(&philo_data[i++].threads, NULL, &philo, g_data) != 0)
 			return (perror("Failed to create a thread"), 1);
 	}
-	if (g_data->nb_philo == 1)
-		if (pthread_detach(philo_data[--i].threads) != 0)
-			return (perror("Failed to detach thread"), 1);
 	return (0);
 }
 

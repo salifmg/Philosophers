@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 17:45:10 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/26 18:06:08 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/29 14:57:16 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ int	check_death(t_info *g_data, long last_meal_time, int th_nbr)
 
 	now = get_ctime();
 	time_passed = now - g_data->start_time;
-	time_passed -= last_meal_time;
+	if (g_data->t_sleep < g_data->t_die || g_data->t_sleep < g_data->t_eat)
+		time_passed -= last_meal_time;
 	pthread_mutex_lock(&g_data->total_ended_th);
 	if ((time_passed >= g_data->t_die) && (g_data->th_end != g_data->nb_philo))
 	{
@@ -63,13 +64,13 @@ int	check_philos(t_info *g_data)
 	i = 0;
 	while (1)
 	{
-		pthread_mutex_lock(&g_data->all_time_passed[i]);
+		pthread_mutex_lock(&g_data->total_time_passed[i]);
 		if (check_death(g_data, g_data->time_passed[i], i) == 1)
 		{
-			pthread_mutex_unlock(&g_data->all_time_passed[i]);
+			pthread_mutex_unlock(&g_data->total_time_passed[i]);
 			break ;
 		}
-		pthread_mutex_unlock(&g_data->all_time_passed[i]);
+		pthread_mutex_unlock(&g_data->total_time_passed[i]);
 		pthread_mutex_lock(&g_data->total_ended_th);
 		if (g_data->th_end == g_data->nb_philo)
 		{
@@ -79,7 +80,7 @@ int	check_philos(t_info *g_data)
 		pthread_mutex_unlock(&g_data->total_ended_th);
 		if (++i == g_data->nb_philo)
 			i = 0;
-		usleep(50);
+		usleep(10);
 	}
 	return (all_philos_ended(g_data), 1);
 }

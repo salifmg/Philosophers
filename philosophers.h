@@ -6,7 +6,7 @@
 /*   By: smagassa <smagassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:03:25 by smagassa          #+#    #+#             */
-/*   Updated: 2025/01/26 19:43:22 by smagassa         ###   ########.fr       */
+/*   Updated: 2025/01/29 14:57:16 by smagassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ typedef struct s_info
 	int				th_nbr_passed;
 
 	pthread_mutex_t	*forks;
-	pthread_mutex_t	*all_time_passed;
+	pthread_mutex_t	*total_time_passed;
 	pthread_mutex_t	writing;
 	pthread_mutex_t	sync_order;
 	pthread_mutex_t	total_ended_th;
@@ -64,7 +64,7 @@ int		sleeping(t_info *g_data, int th_nbr);
 int		eating(t_info *g_data, int th_nbr);
 
 int		threads_creation(t_info *g_data, t_philo *philo_data);
-int		delete_threads(t_info *g_data, t_philo *philo_data);
+int		one_thread(t_info *g_data, t_philo *philo_data);
 int		philosophers_creation(t_info *g_data, t_philo *philo_data);
 int		philo_actions(t_info *g_data, int th_nbr);
 
@@ -76,7 +76,8 @@ int		forks_availabity(t_info *g_data, int th_nbr, int part);
 int		next_fork_i(t_info *g_data, int th_nbr);
 
 int		check_second_fork(t_info *g_data, int th_nbr);
-int		check_and_unlock(t_info *g_data, int th_nbr, int forks_taken);
+int		delete_threads(t_info *g_data, t_philo *philo_data);
+int		is_philo_dead(t_info *g_data, int th_nbr, int forks_taken);
 int		check_death(t_info *g_data, long last_meal_time, int th_nbr);
 int		check_philos(t_info *g_data);
 
